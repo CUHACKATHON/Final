@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<<<<<<< HEAD
+{% block title %}Admin Dashboard - MoodLift{% endblock %}
+=======
+{% block title %}Admin Dashboard - MindCare{% endblock %}
+>>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Admin Dashboard</h1>
+        <p>Real-time analytics and management</p>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>Total Sessions</h3>
+            <p class="stat-number">{{ total_sessions }}</p>
+            <p class="stat-label">Anonymous chat sessions</p>
+        </div>
+        <div class="stat-card">
+            <h3>Total Appointments</h3>
+            <p class="stat-number">{{ total_appointments }}</p>
+            <p class="stat-label">Booked sessions</p>
+        </div>
+        <div class="stat-card">
+            <h3>Pending Appointments</h3>
+            <p class="stat-number">{{ pending_appointments }}</p>
+            <p class="stat-label">Awaiting confirmation</p>
+        </div>
+        <div class="stat-card">
+            <h3>Moderation Queue</h3>
+            <p class="stat-number">{{ unmoderated_posts|add:unmoderated_replies }}</p>
+            <p class="stat-label">{{ unmoderated_posts }} posts, {{ unmoderated_replies }} replies</p>
+        </div>
+    </div>
+
+    <div class="dashboard-sections">
+        <div class="dashboard-section">
+            <h2>Trends Over Time (Last 30 Days)</h2>
+            <canvas id="trends-chart" width="400" height="200"></canvas>
+        </div>
+
+        <div class="dashboard-section">
+            <h2>Recent Appointments</h2>
+            <div class="appointments-list">
+                {% if recent_appointments %}
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Date & Time</th>
+                                <th>Counselor</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for appointment in recent_appointments %}
+                                <tr>
+                                    <td>{{ appointment.appointment_date|date:"M d, Y g:i A" }}</td>
+                                    <td>{{ appointment.counselor.username }}</td>
+                                    <td><span class="status-badge {{ appointment.status }}">{{ appointment.get_status_display }}</span></td>
+                                    <td>
+                                        <button onclick="updateAppointment({{ appointment.id }}, 'confirmed')" class="btn-small">Confirm</button>
+                                        <button onclick="updateAppointment({{ appointment.id }}, 'completed')" class="btn-small">Complete</button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>No appointments yet.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="dashboard-section">
+            <h2>Forum Moderation</h2>
+            <p><a href="{% url 'core:forum_moderate' %}" class="btn-primary">Manage Forum Content</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'js/dashboard.js' %}"></script>
+<script>
+    const chartData = {{ chart_data }};
+</script>
+{% endblock %}
+

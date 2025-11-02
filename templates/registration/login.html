@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Mental Health Platform</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="login-container">
+        <h2>Admin/Counselor Login</h2>
+        <div id="error-message" class="alert alert-error" style="display: none;"></div>
+        <div id="success-message" class="alert alert-success" style="display: none;"></div>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        <form id="login-form" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn-primary btn-full" id="login-button">Login</button>
+        </form>
+        
+        <div class="register-links">
+            <p>Don't have an account? <a href="{% url 'core:register' %}">Register as User</a></p>
+            <p>Are you a counselor? <a href="{% url 'core:register_counselor' %}">Register as Counselor</a></p>
+            <p><a href="{% url 'core:index' %}">Back to Home</a></p>
+        </div>
+    </div>
+    
+    <script src="{% static 'js/auth.js' %}"></script>
+    <script>
+        // Token-based login handling
+        document.getElementById('login-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const errorDiv = document.getElementById('error-message');
+            const successDiv = document.getElementById('success-message');
+            const loginButton = document.getElementById('login-button');
+            
+            // Hide previous messages
+            errorDiv.style.display = 'none';
+            successDiv.style.display = 'none';
+            
+            // Get form values
+            const username = document.querySelector('input[name="username"]').value.trim();
+            const password = document.querySelector('input[name="password"]').value.trim();
+            
+            if (!username || !password) {
+                errorDiv.textContent = 'Please enter both username and password.';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            // Disable button during request
+            loginButton.disabled = true;
+            loginButton.textContent = 'Logging in...';
+            
+            try {
+                // Use Auth utility for token-based login
+                const result = await Auth.login(username, password);
+                
+                if (result.success) {
+                    successDiv.textContent = `Welcome back, ${result.user.username}!`;
+                    successDiv.style.display = 'block';
+                    
+                    // Redirect based on user role
+                    setTimeout(() => {
+                        window.location.href = result.redirectPath || (result.redirect === 'core:dashboard' ? '/dashboard/' : '/');
+                    }, 500);
+                } else {
+                    errorDiv.textContent = result.error || 'Login failed. Please try again.';
+                    errorDiv.style.display = 'block';
+                    loginButton.disabled = false;
+                    loginButton.textContent = 'Login';
+                }
+            } catch (error) {
+                errorDiv.textContent = 'Connection error. Please try again.';
+                errorDiv.style.display = 'block';
+                loginButton.disabled = false;
+                loginButton.textContent = 'Login';
+            }
+        });
+    </script>
+</body>
+</html>
+

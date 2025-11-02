@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<<<<<<< HEAD
+{% block title %}Manage Appointments - MoodLift{% endblock %}
+=======
+{% block title %}Manage Appointments - MindCare{% endblock %}
+>>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Manage Appointments</h1>
+        <p>View and manage all appointments</p>
+    </div>
+
+    <div class="appointments-list">
+        {% if appointments %}
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Date & Time</th>
+                        <th>Counselor</th>
+                        <th>Status</th>
+                        <th>Reason</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for appointment in appointments %}
+                        <tr>
+                            <td>{{ appointment.appointment_date|date:"M d, Y g:i A" }}</td>
+                            <td>{{ appointment.counselor.username }}</td>
+                            <td><span class="status-badge {{ appointment.status }}">{{ appointment.get_status_display }}</span></td>
+                            <td>{{ appointment.reason|truncatewords:10|default:"-" }}</td>
+                            <td>
+                                <select onchange="updateAppointmentStatus({{ appointment.id }}, this.value)" class="form-control">
+                                    <option value="pending" {% if appointment.status == 'pending' %}selected{% endif %}>Pending</option>
+                                    <option value="confirmed" {% if appointment.status == 'confirmed' %}selected{% endif %}>Confirmed</option>
+                                    <option value="completed" {% if appointment.status == 'completed' %}selected{% endif %}>Completed</option>
+                                    <option value="cancelled" {% if appointment.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                                </select>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No appointments found.</p>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+async function updateAppointmentStatus(appointmentId, status) {
+    try {
+        const response = await fetch(`/api/appointments/${appointmentId}/update/`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({status: status})
+        });
+        
+        if (response.ok) {
+            location.reload();
+        } else {
+            alert('Error updating appointment');
+        }
+    } catch (error) {
+        alert('Connection error');
+    }
+}
+</script>
+{% endblock %}
+

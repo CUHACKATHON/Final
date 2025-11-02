@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<<<<<<< HEAD
+{% block title %}Book Appointment - MoodLift{% endblock %}
+=======
+{% block title %}Book Appointment - MindCare{% endblock %}
+>>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Book a Counselor Appointment</h1>
+        <p>All appointments are confidential. You can choose to remain anonymous.</p>
+    </div>
+
+    <div class="appointment-form-container">
+        <form method="post" class="appointment-form">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="{{ form.counselor.id_for_label }}">Select Counselor</label>
+                {{ form.counselor }}
+                {% if form.counselor.errors %}
+                    <div class="error">{{ form.counselor.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.appointment_date.id_for_label }}">Preferred Date & Time</label>
+                {{ form.appointment_date }}
+                {% if form.appointment_date.errors %}
+                    <div class="error">{{ form.appointment_date.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.reason.id_for_label }}">Reason (Optional)</label>
+                {{ form.reason }}
+                {% if form.reason.errors %}
+                    <div class="error">{{ form.reason.errors }}</div>
+                {% endif %}
+                <small class="form-text">This information helps the counselor prepare for your session.</small>
+            </div>
+
+            <button type="submit" class="btn-primary">Book Appointment</button>
+        </form>
+
+        <div class="appointment-info">
+            <h3>What to Expect</h3>
+            <ul>
+                <li>All appointments are completely confidential</li>
+                <li>You can remain anonymous if preferred</li>
+                <li>Counselors are trained professionals</li>
+                <li>Session typically lasts 45-60 minutes</li>
+                <li>You can reschedule or cancel anytime</li>
+            </ul>
+
+            <h3>Emergency Support</h3>
+            <p>If you need immediate help, please call:</p>
+            <ul>
+                <li><strong>National Mental Health Helpline:</strong> 1800-599-0019 (24/7)</li>
+                <li><strong>Aasra Suicide Prevention:</strong> +91-9820466726</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

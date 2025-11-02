@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<<<<<<< HEAD
+{% block title %}Counselor Registration - MoodLift{% endblock %}
+=======
+{% block title %}Counselor Registration - MindCare{% endblock %}
+>>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
+
+{% block content %}
+<div class="login-container">
+    <h2>Counselor Registration</h2>
+    <p class="text-center">Join as a professional counselor (requires admin verification)</p>
+    
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="{{ form.username.id_for_label }}">Username</label>
+            {{ form.username }}
+            {% if form.username.errors %}
+                <div class="error">{{ form.username.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.email.id_for_label }}">Professional Email</label>
+            {{ form.email }}
+            {% if form.email.errors %}
+                <div class="error">{{ form.email.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.first_name.id_for_label }}">First Name</label>
+            {{ form.first_name }}
+            {% if form.first_name.errors %}
+                <div class="error">{{ form.first_name.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.last_name.id_for_label }}">Last Name</label>
+            {{ form.last_name }}
+            {% if form.last_name.errors %}
+                <div class="error">{{ form.last_name.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.qualifications.id_for_label }}">Qualifications</label>
+            {{ form.qualifications }}
+            {% if form.qualifications.errors %}
+                <div class="error">{{ form.qualifications.errors }}</div>
+            {% endif %}
+            <small class="form-text">{{ form.qualifications.help_text }}</small>
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.license_number.id_for_label }}">License Number (Optional)</label>
+            {{ form.license_number }}
+            {% if form.license_number.errors %}
+                <div class="error">{{ form.license_number.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.password1.id_for_label }}">Password</label>
+            {{ form.password1 }}
+            {% if form.password1.errors %}
+                <div class="error">{{ form.password1.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.password2.id_for_label }}">Confirm Password</label>
+            {{ form.password2 }}
+            {% if form.password2.errors %}
+                <div class="error">{{ form.password2.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <button type="submit" class="btn-primary btn-full">Register as Counselor</button>
+    </form>
+    
+    <div class="register-links">
+        <p>Already have an account? <a href="{% url 'core:login' %}">Login here</a></p>
+        <p>Register as regular user? <a href="{% url 'core:register' %}">User Registration</a></p>
+        <p><a href="{% url 'core:index' %}">Back to Home</a></p>
+    </div>
+</div>
+{% endblock %}
+

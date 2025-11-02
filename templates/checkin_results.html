@@ -1,0 +1,390 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Your Check-in Results - MoodLift{% endblock %}
+
+{% block content %}
+<div class="results-container">
+    {% if bucket == 1 %}
+    <!-- Bucket 1: Green/Mild (Score 0-4) -->
+    <div class="result-card green">
+        <div class="result-icon">✅</div>
+        <h1>Clinical Assessment: Mild Symptoms (Score: {{ score }}/15)</h1>
+        <div class="psychiatrist-note">
+            <h3>From a Clinical Perspective:</h3>
+            <p>Your responses indicate <strong>minimal to mild psychological distress</strong> at this time. From a psychiatric standpoint, this score range (0-4) suggests that while you may experience occasional stress or worry, your overall emotional regulation and coping mechanisms appear to be functioning well.</p>
+        </div>
+        <div class="result-content">
+            <h3>What This Means:</h3>
+            <p>Your current mental health status appears stable. You're demonstrating good emotional resilience and effective stress management. However, <strong>mental health maintenance is as important as physical health</strong> - preventive care is key.</p>
+            
+            <h3>Clinical Recommendation:</h3>
+            <p>While no immediate intervention is necessary, maintaining your mental wellness through proactive self-care is encouraged. Our Resource Hub offers evidence-based tools to help you sustain your current positive state:</p>
+            <ul>
+                <li><strong>Preventive Mindfulness Practices:</strong> Regular meditation and grounding techniques</li>
+                <li><strong>Stress Management Strategies:</strong> Time management and work-life balance tools</li>
+                <li><strong>Wellness Maintenance:</strong> Self-care routines and emotional regulation skills</li>
+            </ul>
+        </div>
+        <div class="result-actions">
+            <a href="{% url 'core:resources' %}" class="btn-primary">Explore Resource Hub</a>
+            <a href="{% url 'core:index' %}" class="btn-secondary">Return Home</a>
+        </div>
+    </div>
+
+    {% elif bucket == 2 %}
+    <!-- Bucket 2: Yellow/Moderate (Score 5-9) -->
+    <div class="result-card yellow">
+        <div class="result-icon">⚠️</div>
+        <h1>Clinical Assessment: Moderate Symptoms (Score: {{ score }}/15)</h1>
+        <div class="psychiatrist-note">
+            <h3>From a Clinical Perspective:</h3>
+            <p>Your responses indicate <strong>moderate psychological distress</strong>. Clinically, a score of 5-9 on this screening tool suggests you're experiencing noticeable anxiety, depressive symptoms, or stress that may be impacting your daily functioning. This level warrants attention and supportive intervention.</p>
+        </div>
+        <div class="result-content">
+            <h3>Clinical Interpretation:</h3>
+            <p>You're experiencing symptoms that, while not severe, are significant enough to notice. This is <strong>completely normal</strong>, especially during periods of increased academic pressure, life transitions, or stress. From a psychiatric viewpoint, early intervention and support can prevent these symptoms from escalating.</p>
+            
+            <h3>Clinical Recommendation:</h3>
+            <p><strong>Immediate Support:</strong> Our AI Chatbot can provide real-time psychological first-aid, including evidence-based grounding exercises, anxiety management techniques, and emotional support. Engaging with supportive resources can help regulate your stress response.</p>
+            
+            <p><strong>Peer Support:</strong> Connecting with others who understand what you're experiencing can reduce feelings of isolation and normalize your experience. Our peer support forum provides a safe, anonymous space for sharing.</p>
+            
+            <p><strong>Monitoring:</strong> If these symptoms persist for more than 2 weeks or worsen, consider scheduling a consultation with a mental health professional for a comprehensive assessment.</p>
+        </div>
+        <div class="result-actions">
+            <a href="{% url 'core:chat' %}" class="btn-primary">Talk to AI Assistant</a>
+            <a href="{% url 'core:forum' %}" class="btn-secondary">Visit Peer Support Forum</a>
+            <a href="{% url 'core:appointments' %}" class="btn-secondary">Book Professional Consultation</a>
+        </div>
+    </div>
+
+    {% elif bucket == 3 %}
+    <!-- Bucket 3: Red/High (Score 10-15) -->
+    <div class="result-card red">
+        <div class="result-icon">🚨</div>
+        <h1>Clinical Assessment: Significant Symptoms (Score: {{ score }}/15)</h1>
+        <div class="psychiatrist-note">
+            <h3>From a Clinical Perspective:</h3>
+            <p>Your responses indicate <strong>clinically significant psychological distress</strong>. A score of 10-15 suggests you're experiencing substantial anxiety, depression, or stress symptoms that likely impact your daily life, academic performance, relationships, or overall wellbeing. <strong>This level of distress warrants professional attention.</strong></p>
+        </div>
+        <div class="result-content">
+            <h3>Clinical Interpretation:</h3>
+            <p>From a psychiatric standpoint, these symptoms suggest you may benefit from professional mental health support. What you're experiencing is <strong>real, valid, and treatable</strong>. You don't have to manage this alone, and seeking help is a sign of strength, not weakness.</p>
+            
+            <h3>Clinical Recommendation:</h3>
+            <p><strong>Immediate Support (Right Now):</strong></p>
+            <ul>
+                <li><strong>AI Assistant:</strong> Our chatbot can provide immediate psychological first-aid, crisis support, and coping strategies to help you feel more stable right now.</li>
+                <li><strong>Emergency Resources:</strong> If you're experiencing thoughts of self-harm or suicide, please contact the emergency helplines listed below immediately.</li>
+            </ul>
+            
+            <p><strong>Professional Intervention (Strongly Recommended):</strong></p>
+            <ul>
+                <li><strong>Professional Evaluation:</strong> A mental health professional can conduct a comprehensive assessment, provide an accurate diagnosis if needed, and develop an individualized treatment plan.</li>
+                <li><strong>Treatment Options:</strong> This may include therapy (CBT, DBT, or other evidence-based approaches), medication evaluation if appropriate, and ongoing support.</li>
+                <li><strong>Early Intervention:</strong> Addressing these symptoms now can prevent them from worsening and improve your quality of life significantly.</li>
+            </ul>
+            
+            <p><strong>Peer Support (Ongoing):</strong> Our peer support forum provides community and understanding, which can be an important part of your recovery journey alongside professional care.</p>
+            
+            <p class="important-note"><strong>Important:</strong> If these feelings have persisted for more than two weeks, or if you're experiencing thoughts of self-harm, professional evaluation is strongly recommended. Mental health conditions are medical conditions that respond well to treatment.</p>
+        </div>
+        <div class="result-actions">
+            <a href="{% url 'core:chat' %}" class="btn-primary recommended">Get Immediate Support (AI Assistant)</a>
+            <a href="{% url 'core:appointments' %}" class="btn-secondary">Schedule Professional Consultation</a>
+            <a href="{% url 'core:forum' %}" class="btn-secondary">Connect with Peer Support</a>
+        </div>
+    </div>
+
+    {% endif %}
+
+    <!-- Score Display -->
+    <div class="score-display">
+        <p>Your Screening Score: <strong>{{ score }}/15</strong></p>
+        <p class="score-note"><strong>Clinical Note:</strong> This is a screening tool, not a diagnostic instrument. A mental health professional would conduct a comprehensive clinical interview, review your history, and consider multiple factors before making any diagnosis. This score indicates the level of support that may be beneficial for you at this time.</p>
+    </div>
+
+    <!-- Emergency Contact -->
+    <div class="emergency-notice">
+        <h3>Need Immediate Help?</h3>
+        <p>If you're in crisis, please contact:</p>
+        <div class="emergency-contacts">
+            <div class="contact-card">
+                <strong>National Mental Health Helpline</strong>
+                <p>1800-599-0019 (24/7)</p>
+            </div>
+            <div class="contact-card">
+                <strong>Aasra Suicide Prevention</strong>
+                <p>+91-9820466726</p>
+            </div>
+            <div class="contact-card">
+                <strong>iCall</strong>
+                <p>+91-9152987821</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.results-container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.result-card {
+    background: white;
+    border-radius: 15px;
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    border-left: 5px solid;
+}
+
+.result-card.green {
+    border-left-color: #27ae60;
+    background: linear-gradient(135deg, #f8fff9 0%, #ffffff 100%);
+}
+
+.result-card.yellow {
+    border-left-color: #f39c12;
+    background: linear-gradient(135deg, #fffef8 0%, #ffffff 100%);
+}
+
+.result-card.red {
+    border-left-color: #e74c3c;
+    background: linear-gradient(135deg, #fff8f8 0%, #ffffff 100%);
+}
+
+.result-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.result-card h1 {
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+    line-height: 1.3;
+}
+
+.result-content {
+    margin-bottom: 2rem;
+    text-align: left;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.result-content p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #34495e;
+    margin-bottom: 1rem;
+}
+
+.result-content h3 {
+    color: #2c3e50;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    font-size: 1.3rem;
+}
+
+.psychiatrist-note {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-left: 4px solid #667eea;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    text-align: left;
+}
+
+.psychiatrist-note h3 {
+    color: #667eea;
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    font-size: 1.2rem;
+}
+
+.psychiatrist-note p {
+    color: #495057;
+    line-height: 1.7;
+    margin-bottom: 0.5rem;
+}
+
+.important-note {
+    background: #fff3cd;
+    border-left: 4px solid #ffc107;
+    padding: 1rem;
+    margin-top: 1rem;
+    border-radius: 5px;
+    font-size: 1rem !important;
+}
+
+.result-content ul, .result-content ol {
+    margin: 1rem 0;
+    padding-left: 2rem;
+}
+
+.result-content li {
+    margin-bottom: 0.5rem;
+    color: #34495e;
+}
+
+.result-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-primary, .btn-secondary {
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.btn-primary {
+    background: #3498db;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #2980b9;
+    transform: translateY(-2px);
+}
+
+.btn-primary.recommended {
+    background: #e74c3c;
+    animation: pulse 2s infinite;
+}
+
+.btn-primary.recommended:hover {
+    background: #c0392b;
+}
+
+.btn-secondary {
+    background: #95a5a6;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #7f8c8d;
+    transform: translateY(-2px);
+}
+
+.score-display {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 10px;
+    text-align: center;
+    margin-bottom: 2rem;
+    border: 1px solid #e9ecef;
+}
+
+.score-display p {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #495057;
+}
+
+.score-note {
+    font-size: 0.9rem !important;
+    color: #6c757d !important;
+    margin-top: 0.5rem !important;
+}
+
+.emergency-notice {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 10px;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.emergency-notice h3 {
+    color: #856404;
+    margin-bottom: 1rem;
+}
+
+.emergency-notice p {
+    color: #856404;
+    margin-bottom: 1rem;
+}
+
+.emergency-contacts {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.contact-card {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    min-width: 200px;
+}
+
+.contact-card strong {
+    color: #495057;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.contact-card p {
+    color: #6c757d;
+    margin: 0;
+    font-weight: 600;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+@media (max-width: 768px) {
+    .results-container {
+        margin: 1rem;
+        padding: 0;
+    }
+
+    .result-card {
+        padding: 1.5rem;
+    }
+
+    .result-card h1 {
+        font-size: 1.5rem;
+    }
+
+    .result-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .btn-primary, .btn-secondary {
+        width: 100%;
+        text-align: center;
+    }
+
+    .emergency-contacts {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .contact-card {
+        width: 100%;
+        max-width: 300px;
+    }
+}
+</style>
+{% endblock %}

@@ -1,0 +1,17 @@
+{
+  "status": "commited",
+  "type": "frontend",
+  "scope": "codebase",
+  "localEndpoint": "http://localhost:8000",
+  "backendAuthType": "public",
+  "executionArgs": {
+    "projectName": "CU_HACKATHON",
+    "projectPath": "E:\\CU_HACKATHON",
+    "testIds": [],
+    "additionalInstruction": "The application now uses token-based authentication. The login endpoint at /login/ now supports both form submission (for backward compatibility) and JSON POST requests that return JWT tokens. Tokens are stored in localStorage via the Auth JavaScript utility. All protected API endpoints support both session and token authentication. Test credentials: admin/admin123 for admin, counselor1/counselor123 for counselor, testuser/user123 for regular user.",
+    "envs": {
+      "API_KEY": "sk-user-Q3U44pLkBglrXoQl8_grFVSPz5VeQJaaY_OUEArtxZOtngARcI_Kgg0jOGZMz3O6eohRkdOZkHpbbeTKnz3oZcWLC80oeYBZK512Fhhg1Z0a-1IWjotsLfXHhHbCNyJFDeY"
+    }
+  },
+  "proxy": "http://1ef08e33-a546-4eb0-9905-df7ae732e70d:mnXFRVPmpM1oSouBE4ZV7ZHsZFwlNyTX@tun.testsprite.com:8080"
+}

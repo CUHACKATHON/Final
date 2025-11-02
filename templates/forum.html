@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<<<<<<< HEAD
+{% block title %}Peer Support Forum - MoodLift{% endblock %}
+=======
+{% block title %}Peer Support Forum - MindCare{% endblock %}
+>>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Peer Support Forum</h1>
+        <p>A safe, anonymous space to connect with fellow students who understand what you're going through</p>
+    </div>
+
+    <div class="forum-actions">
+        <button id="create-post-btn" class="btn-primary">Create New Post</button>
+    </div>
+
+    <div id="create-post-form" class="create-post-form" style="display: none;">
+        <h3>Create Anonymous Post</h3>
+        <form id="post-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="post-title">Title</label>
+                <input type="text" id="post-title" name="title" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="post-content">Content</label>
+                <textarea id="post-content" name="content" class="form-control" rows="5" required></textarea>
+            </div>
+            <button type="submit" class="btn-primary">Submit Post</button>
+            <button type="button" id="cancel-post-btn" class="btn-secondary">Cancel</button>
+        </form>
+    </div>
+
+    <div class="forum-posts">
+        {% if posts %}
+            {% for post in posts %}
+<<<<<<< HEAD
+                <div class="forum-post-card" data-post-id="{{ post.id }}">
+=======
+                <div class="forum-post-card">
+>>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
+                    <h3><a href="{% url 'core:forum_post_detail' post.id %}">{{ post.title }}</a></h3>
+                    <p class="post-content-preview">{{ post.content|truncatewords:30 }}</p>
+                    <div class="post-meta">
+                        <span class="post-date">{{ post.timestamp|date:"M d, Y g:i A" }}</span>
+                        <span class="replies-count">{{ post.replies_count }} replies</span>
+                    </div>
+<<<<<<< HEAD
+                    <div class="post-actions">
+                        <button class="like-btn {% if post.id in liked_post_ids %}liked{% endif %}" data-post-id="{{ post.id }}" title="Like this post">
+                            <span class="like-icon">{% if post.id in liked_post_ids %}❤️{% else %}🤍{% endif %}</span>
+                            <span class="likes-count">{{ post.likes_count }}</span>
+                        </button>
+                        <button class="share-btn" data-post-id="{{ post.id }}" title="Share this post">
+                            <span class="share-icon">🔗</span>
+                            <span class="shares-count">{{ post.shares_count }}</span>
+                        </button>
+                        <a href="{% url 'core:forum_post_detail' post.id %}" class="btn-link">Read more →</a>
+                    </div>
+=======
+                    <a href="{% url 'core:forum_post_detail' post.id %}" class="btn-link">Read more →</a>
+>>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="no-posts">
+                <p>No posts yet. Be the first to share your thoughts!</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/forum.js' %}"></script>
+{% endblock %}
+

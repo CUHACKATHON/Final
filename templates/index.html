@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<<<<<<< HEAD
+{% block title %}MoodLift - Mental Health Support for Indian College Students{% endblock %}
+=======
+{% block title %}MindCare - Mental Health Support for Indian College Students{% endblock %}
+>>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
+
+{% block content %}
+<div class="hero-section">
+    <div class="hero-content">
+        <h1>Your Mental Health Matters</h1>
+        <p class="hero-subtitle">A safe, anonymous space for Indian college students to seek support</p>
+        <div class="hero-stats">
+            <div class="stat-box">
+                <span class="stat-number">60%</span>
+                <span class="stat-label">Indian college students experience depression symptoms</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-number">70%</span>
+                <span class="stat-label">Grapple with anxiety issues</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-number">1:100K</span>
+                <span class="stat-label">Mental health professional ratio in India</span>
+            </div>
+        </div>
+        <div class="hero-cta">
+            <a href="{% url 'core:chat' %}" class="btn-primary btn-large">Start Anonymous Chat</a>
+            <a href="{% url 'core:resources' %}" class="btn-secondary btn-large">Explore Resources</a>
+        </div>
+    </div>
+</div>
+
+<<<<<<< HEAD
+<!-- 1-Minute Anonymous Check-in Section -->
+<div class="checkin-section">
+    <div class="container">
+        <div class="checkin-card">
+            <div class="checkin-illustration">
+                <div class="floating-elements">
+                    <div class="floating-circle circle-1"></div>
+                    <div class="floating-circle circle-2"></div>
+                    <div class="floating-circle circle-3"></div>
+                </div>
+                <div class="mood-emoji">😊</div>
+            </div>
+            <div class="checkin-content">
+                <h2>How are you feeling right now?</h2>
+                <p>Take a quick 1-minute check-in to understand your current emotional state.</p>
+                <div class="question-preview">
+                    <div class="preview-question">• How often have you felt anxious or worried?</div>
+                    <div class="preview-question">• How often have you felt down or hopeless?</div>
+                    <div class="preview-question">• How often have you felt overwhelmed?</div>
+                </div>
+                <a href="{% url 'core:checkin' %}" class="btn-primary btn-checkin">
+                    <span class="btn-text">Start 1-Min Check-in</span>
+                    <span class="btn-arrow">→</span>
+                </a>
+                <p class="checkin-note">100% Anonymous. No Sign-up Required.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+=======
+>>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
+<div class="features-section">
+    <div class="container">
+        <h2 class="section-title">How We Help</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3>1. Complete Anonymity</h3>
+                <p>Your identity is protected. Research shows anonymity reduces fear of judgment by 85%, making it easier to seek help when you need it most.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3>2. 24/7 AI Chat Support</h3>
+                <p>Get immediate, evidence-based coping strategies and emotional support. Our AI chatbot is available anytime you feel lost or overwhelmed.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">👥</div>
+                <h3>3. Professional Counseling</h3>
+                <p>Book confidential appointments with verified counselors. We gently guide you toward professional help when needed.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📚</div>
+                <h3>4. Culturally Contextual Resources</h3>
+                <p>Access videos, guided meditations, and articles in multiple Indian languages, designed specifically for Indian students.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💬</div>
+                <h3>5. Peer Support Forum</h3>
+                <p>Connect with fellow students. Research shows peer support reduces stress and increases help-seeking by 30% among Indian students.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="call-to-action-section">
+    <div class="container">
+        <h2>You Don't Have to Walk Alone</h2>
+        <p>Every student's mind deserves care, dignity, and hope. Join thousands of students who have found support through our platform.</p>
+        <div class="cta-buttons">
+            <a href="{% url 'core:chat' %}" class="btn-primary">Start Chatting Anonymously</a>
+            <a href="{% url 'core:appointments' %}" class="btn-secondary">Book Counselor Appointment</a>
+            <a href="{% url 'core:forum' %}" class="btn-secondary">Join Peer Support Forum</a>
+        </div>
+    </div>
+</div>
+
+<div class="emergency-section">
+    <div class="container">
+        <h2>Need Immediate Help?</h2>
+        <p>If you're in crisis, please reach out immediately:</p>
+        <div class="emergency-contacts">
+            <div class="contact-card">
+                <strong>National Mental Health Helpline</strong>
+                <p>1800-599-0019 (24/7)</p>
+            </div>
+            <div class="contact-card">
+                <strong>Aasra Suicide Prevention</strong>
+                <p>+91-9820466726</p>
+            </div>
+            <div class="contact-card">
+                <strong>iCall</strong>
+                <p>+91-9152987821</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

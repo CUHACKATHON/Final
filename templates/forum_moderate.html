@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<<<<<<< HEAD
+{% block title %}Forum Moderation - MoodLift{% endblock %}
+=======
+{% block title %}Forum Moderation - MindCare{% endblock %}
+>>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Forum Moderation</h1>
+        <p>Review and approve/delete forum posts and replies</p>
+    </div>
+
+    <div class="moderation-section">
+        <h2>Posts Pending Moderation ({{ posts.count }})</h2>
+        {% if posts %}
+            {% for post in posts %}
+                <div class="moderation-item">
+                    <h4>{{ post.title }}</h4>
+                    <p>{{ post.content|truncatewords:50 }}</p>
+                    <p class="meta">Posted: {{ post.timestamp|date:"M d, Y g:i A" }}</p>
+                    <div class="moderation-actions">
+                        <button onclick="approveItem('post', {{ post.id }})" class="btn-success">Approve</button>
+                        <button onclick="deleteItem('post', {{ post.id }})" class="btn-danger">Delete</button>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No posts pending moderation.</p>
+        {% endif %}
+    </div>
+
+    <div class="moderation-section">
+        <h2>Replies Pending Moderation ({{ replies.count }})</h2>
+        {% if replies %}
+            {% for reply in replies %}
+                <div class="moderation-item">
+                    <p>{{ reply.content|truncatewords:50 }}</p>
+                    <p class="meta">Posted: {{ reply.timestamp|date:"M d, Y g:i A" }}</p>
+                    <p class="meta">Reply to: {{ reply.post.title }}</p>
+                    <div class="moderation-actions">
+                        <button onclick="approveItem('reply', {{ reply.id }})" class="btn-success">Approve</button>
+                        <button onclick="deleteItem('reply', {{ reply.id }})" class="btn-danger">Delete</button>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No replies pending moderation.</p>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+async function approveItem(type, id) {
+    if (!confirm('Approve this ' + type + '?')) return;
+    
+    try {
+        let response;
+        // Use authenticated fetch if Auth utility is available
+        if (typeof Auth !== 'undefined' && Auth.isAuthenticated()) {
+            response = await Auth.authenticatedFetch(`/api/forum/${type}/${id}/approve/`, {
+                method: 'POST'
+            });
+        } else {
+            // Fallback to regular fetch (session-based)
+            response = await fetch(`/api/forum/${type}/${id}/approve/`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+            });
+        }
+        
+        if (response.ok) {
+            alert('Approved successfully!');
+            location.reload();
+        } else {
+            const data = await response.json().catch(() => ({}));
+            alert('Error: ' + (data.error || 'Error approving item'));
+        }
+    } catch (error) {
+        alert('Connection error');
+        console.error('Error:', error);
+    }
+}
+
+async function deleteItem(type, id) {
+    if (!confirm('Delete this ' + type + '? This cannot be undone.')) return;
+    
+    try {
+        let response;
+        // Use authenticated fetch if Auth utility is available
+        if (typeof Auth !== 'undefined' && Auth.isAuthenticated()) {
+            response = await Auth.authenticatedFetch(`/api/forum/${type}/${id}/delete/`, {
+                method: 'POST'
+            });
+        } else {
+            // Fallback to regular fetch (session-based)
+            response = await fetch(`/api/forum/${type}/${id}/delete/`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+            });
+        }
+        
+        if (response.ok) {
+            alert('Deleted successfully!');
+            location.reload();
+        } else {
+            const data = await response.json().catch(() => ({}));
+            alert('Error: ' + (data.error || 'Error deleting item'));
+        }
+    } catch (error) {
+        alert('Connection error');
+        console.error('Error:', error);
+    }
+}
+</script>
+{% endblock %}
+

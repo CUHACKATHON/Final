@@ -1,0 +1,77 @@
+import asyncio
+from playwright import async_api
+from playwright.async_api import expect
+
+async def run_test():
+    pw = None
+    browser = None
+    context = None
+    
+    try:
+        # Start a Playwright session in asynchronous mode
+        pw = await async_api.async_playwright().start()
+        
+        # Launch a Chromium browser in headless mode with custom arguments
+        browser = await pw.chromium.launch(
+            headless=True,
+            args=[
+                "--window-size=1280,720",         # Set the browser window size
+                "--disable-dev-shm-usage",        # Avoid using /dev/shm which can cause issues in containers
+                "--ipc=host",                     # Use host-level IPC for better stability
+                "--single-process"                # Run the browser in a single process mode
+            ],
+        )
+        
+        # Create a new browser context (like an incognito window)
+        context = await browser.new_context()
+        context.set_default_timeout(5000)
+        
+        # Open a new page in the browser context
+        page = await context.new_page()
+        
+        # Navigate to your target URL and wait until the network request is committed
+        await page.goto("http://localhost:8000/", wait_until="commit", timeout=10000)
+        
+        # Wait for the main page to reach DOMContentLoaded state (optional for stability)
+        try:
+            await page.wait_for_load_state("domcontentloaded", timeout=3000)
+        except async_api.Error:
+            pass
+        
+        # Iterate through all iframes and wait for them to load as well
+        for frame in page.frames:
+            try:
+                await frame.wait_for_load_state("domcontentloaded", timeout=3000)
+            except async_api.Error:
+                pass
+        
+        # Interact with the page elements to simulate user flow
+        # --> Assertions to verify final state
+        frame = context.pages[-1]
+        await expect(frame.locator('text=60% Indian college students experience depression symptoms').first).to_be_visible(timeout=30000)
+        await expect(frame.locator('text=70% Grapple with anxiety issues').first).to_be_visible(timeout=30000)
+        await expect(frame.locator('text=1:100K Mental health professional ratio in India').first).to_be_visible(timeout=30000)
+        await expect(frame.locator('text=🔒\n1. Complete Anonymity\n\nYour identity is protected. Research shows anonymity reduces fear of judgment by 85%, making it easier to seek help when you need it most.').first).to_be_visible(timeout=30000)
+        await expect(frame.locator('text=🤖\n2. 24/7 AI Chat Support\n\nGet immediate, evidence-based coping strategies and emotional support. Our AI chatbot is available anytime you feel lost or overwhelmed.').first).to_be_visible(timeout=30000)
+        await expect(frame.locator('text=👥\n3. Professional Counseling\n\nBook confidential appointments with verified counselors. We gently guide you toward professional help when needed.').first).to_be_visible(timeout=30000)
+        await expect(frame.locator('text=📚\n4. Culturally Contextual Resources\n\nAccess videos, guided meditations, and articles in multiple Indian languages, designed specifically for Indian students.').first).to_be_visible(timeout=30000)
+        await expect(frame.locator('text=💬\n5. Peer Support Forum\n\nConnect with fellow students. Research shows peer support reduces stress and increases help-seeking by 30% among Indian students.').first).to_be_visible(timeout=30000)
+        await expect(frame.locator('text=Home').first).to_be_visible(timeout=30000)
+        await expect(frame.locator('text=Chat').first).to_be_visible(timeout=30000)
+        await expect(frame.locator('text=Appointments').first).to_be_visible(timeout=30000)
+        await expect(frame.locator('text=Resources').first).to_be_visible(timeout=30000)
+        await expect(frame.locator('text=Forum').first).to_be_visible(timeout=30000)
+        await expect(frame.locator('text=Login').first).to_be_visible(timeout=30000)
+        await expect(frame.locator('text=Register').first).to_be_visible(timeout=30000)
+        await asyncio.sleep(5)
+    
+    finally:
+        if context:
+            await context.close()
+        if browser:
+            await browser.close()
+        if pw:
+            await pw.stop()
+            
+asyncio.run(run_test())
+    

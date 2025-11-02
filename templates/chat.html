@@ -1,0 +1,628 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<<<<<<< HEAD
+{% block title %}MoodLift Chat - Anonymous Mental Health Support{% endblock %}
+=======
+{% block title %}MindCare Chat - Anonymous Mental Health Support{% endblock %}
+>>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
+
+{% block content %}
+<div class="chat-container">
+    <!-- Consent Modal -->
+    <div id="consent-modal" class="modal" style="display: block;">
+        <div class="modal-content">
+            <h2>Camera Access Consent</h2>
+            <p>Humein aapki madad karne ke liye, hum aapke live facial expressions ka analysis karenge. Hum aapka video ya photo kabhi store nahi karenge.</p>
+            <div class="modal-buttons">
+                <button id="consent-yes" class="btn-primary">Haan, Camera Access Dijiye</button>
+                <button id="consent-no" class="btn-secondary">Nahi, Sirf Text Chat Rakhiye</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Interface -->
+    <div class="chat-header">
+<<<<<<< HEAD
+        <h1>MoodLift Anonymous Chat</h1>
+        <p>Your emotions matter. We're here to help.</p>
+        <!-- Language Switcher -->
+        <div class="language-switcher">
+            <label for="language-select">Language: </label>
+            <select id="language-select" class="language-select">
+                <option value="en">English</option>
+                <option value="hi">Hindi</option>
+                <option value="hin">Hinglish</option>
+            </select>
+        </div>
+=======
+        <h1>MindCare Anonymous Chat</h1>
+        <p>Your emotions matter. We're here to help.</p>
+>>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
+    </div>
+
+    <!-- Video Feed (Hidden initially) -->
+    <div id="video-container" class="video-container" style="display: none;">
+        <video id="video" autoplay muted></video>
+        <canvas id="canvas" style="display: none;"></canvas>
+        <div id="emotion-indicator" class="emotion-indicator">
+            <span id="current-emotion">Analyzing...</span>
+        </div>
+    </div>
+
+    <!-- Chat Messages -->
+    <div id="chat-messages" class="chat-messages"></div>
+
+    <!-- Chat Input -->
+    <div class="chat-input-container">
+        <div class="input-group">
+            <input type="text" id="message-input" placeholder="Type your message here..." maxlength="500">
+            <button id="send-button" class="btn-primary">Send</button>
+        </div>
+        <div class="input-info">
+            <small>Your conversation is completely anonymous and confidential.</small>
+        </div>
+    </div>
+</div>
+
+<style>
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    max-width: 500px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.modal-content h2 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
+
+.modal-content p {
+    color: #555;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.chat-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.chat-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.chat-header h1 {
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.chat-header p {
+    color: #7f8c8d;
+}
+
+<<<<<<< HEAD
+.language-switcher {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.language-switcher label {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+}
+
+.language-select {
+    padding: 0.5rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: white;
+    color: #2c3e50;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.language-select:hover {
+    border-color: #3498db;
+}
+
+=======
+>>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
+.video-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+#video {
+    width: 200px;
+    height: 150px;
+    border-radius: 10px;
+    border: 2px solid #3498db;
+    background: #f8f9fa;
+}
+
+.emotion-indicator {
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #3498db;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.chat-messages {
+    height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background: #f8f9fa;
+}
+
+.message {
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    border-radius: 10px;
+    max-width: 70%;
+}
+
+.message.user {
+    background: #3498db;
+    color: white;
+    margin-left: auto;
+    text-align: right;
+}
+
+.message.bot {
+    background: white;
+    border: 1px solid #ddd;
+    margin-right: auto;
+}
+
+.message-time {
+    font-size: 0.8rem;
+    opacity: 0.7;
+    margin-top: 0.25rem;
+}
+
+.chat-input-container {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 1rem;
+    background: white;
+}
+
+.input-group {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+#message-input {
+    flex: 1;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.btn-primary, .btn-secondary {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.btn-primary {
+    background: #3498db;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #2980b9;
+}
+
+.btn-secondary {
+    background: #95a5a6;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #7f8c8d;
+}
+
+.input-info {
+    text-align: center;
+}
+
+.input-info small {
+    color: #7f8c8d;
+}
+
+@media (max-width: 768px) {
+    .chat-container {
+        padding: 0.5rem;
+    }
+
+    .modal-content {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+
+    .modal-buttons {
+        flex-direction: column;
+    }
+
+    .chat-messages {
+        height: 300px;
+    }
+
+    .input-group {
+        flex-direction: column;
+    }
+}
+</style>
+
+<script>
+// Global variables
+let sessionId = localStorage.getItem('chat_session_id') || generateSessionId();
+let currentEmotion = 'Neutral';
+let emotionInterval = null;
+let stream = null;
+<<<<<<< HEAD
+let currentLanguage = localStorage.getItem('preferred_language') || 'en';
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Set language selector to saved preference
+    const languageSelect = document.getElementById('language-select');
+    if (languageSelect && currentLanguage) {
+        languageSelect.value = currentLanguage;
+    }
+    
+=======
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+>>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
+    // Show consent modal
+    showConsentModal();
+
+    // Set up event listeners
+    setupEventListeners();
+
+    // Load existing session messages
+    loadChatHistory();
+});
+
+// Consent modal functions
+function showConsentModal() {
+    const modal = document.getElementById('consent-modal');
+    modal.style.display = 'flex';
+}
+
+function hideConsentModal() {
+    const modal = document.getElementById('consent-modal');
+    modal.style.display = 'none';
+}
+
+// Event listeners
+function setupEventListeners() {
+    // Consent buttons
+    document.getElementById('consent-yes').addEventListener('click', handleConsentYes);
+    document.getElementById('consent-no').addEventListener('click', handleConsentNo);
+
+    // Chat input
+    document.getElementById('send-button').addEventListener('click', sendMessage);
+    document.getElementById('message-input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    });
+<<<<<<< HEAD
+
+    // Language switcher
+    document.getElementById('language-select').addEventListener('change', function(e) {
+        currentLanguage = e.target.value;
+        localStorage.setItem('preferred_language', currentLanguage);
+    });
+=======
+>>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
+}
+
+// Handle consent responses
+function handleConsentYes() {
+    hideConsentModal();
+
+    // Show video container
+    document.getElementById('video-container').style.display = 'block';
+
+    // Start webcam
+    startWebcam();
+
+    // Start emotion capture
+    startEmotionCapture();
+}
+
+function handleConsentNo() {
+    hideConsentModal();
+    currentEmotion = 'No_Face_Detected';
+    showMessage('System', 'Text-only chat mode activated. Facial emotion analysis disabled.', 'bot');
+}
+
+// Webcam functions
+async function startWebcam() {
+    try {
+        const video = document.getElementById('video');
+        stream = await navigator.mediaDevices.getUserMedia({
+            video: { width: 320, height: 240 },
+            audio: false
+        });
+
+        video.srcObject = stream;
+        showMessage('System', 'Camera access granted. Facial emotion analysis active.', 'bot');
+    } catch (error) {
+        console.error('Error accessing webcam:', error);
+        showMessage('System', 'Camera access denied or unavailable. Using text-only mode.', 'bot');
+        currentEmotion = 'No_Face_Detected';
+    }
+}
+
+// Emotion capture functions
+function startEmotionCapture() {
+<<<<<<< HEAD
+    // Capture emotion in real-time (every 500ms for instant recognition)
+    emotionInterval = setInterval(captureEmotion, 500);
+
+    // Initial capture
+    setTimeout(captureEmotion, 200);
+=======
+    // Capture emotion every 5 seconds
+    emotionInterval = setInterval(captureEmotion, 5000);
+
+    // Initial capture
+    setTimeout(captureEmotion, 1000);
+>>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
+}
+
+async function captureEmotion() {
+    if (!stream) return;
+
+    try {
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Set canvas size to video size
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+
+        // Draw current video frame to canvas
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        // Convert canvas to blob
+        canvas.toBlob(async function(blob) {
+            const formData = new FormData();
+            formData.append('image', blob, 'frame.jpg');
+
+            try {
+                const response = await fetch('/api/v1/predict/', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    currentEmotion = data.emotion;
+                    updateEmotionIndicator(currentEmotion);
+                } else {
+                    console.error('Emotion prediction failed:', data.error);
+                    currentEmotion = 'Decode_Error';
+                }
+            } catch (error) {
+                console.error('Error sending emotion request:', error);
+                currentEmotion = 'Decode_Error';
+            }
+        }, 'image/jpeg', 0.8);
+
+    } catch (error) {
+        console.error('Error capturing emotion:', error);
+        currentEmotion = 'Decode_Error';
+    }
+}
+
+function updateEmotionIndicator(emotion) {
+    const indicator = document.getElementById('current-emotion');
+    indicator.textContent = `Emotion: ${emotion}`;
+
+    // Update color based on emotion
+    const colors = {
+        'Happy': '#27ae60',
+        'Sad': '#e74c3c',
+        'Angry': '#e67e22',
+        'Fear': '#9b59b6',
+        'Surprise': '#f39c12',
+        'Neutral': '#3498db',
+        'No_Face_Detected': '#95a5a6',
+        'Decode_Error': '#e74c3c'
+    };
+
+    indicator.parentElement.style.background = colors[emotion] || '#95a5a6';
+}
+
+// Chat functions
+function sendMessage() {
+    const input = document.getElementById('message-input');
+    const message = input.value.trim();
+
+    if (!message) return;
+
+    // Show user message
+    showMessage('You', message, 'user');
+    input.value = '';
+
+    // Send to server with emotion
+    sendChatToServer(message, currentEmotion);
+}
+
+async function sendChatToServer(message, emotion) {
+    try {
+        const response = await fetch('/api/chat/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                message: message,
+                emotion: emotion,
+<<<<<<< HEAD
+                session_id: sessionId,
+                language: currentLanguage
+=======
+                session_id: sessionId
+>>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.response) {
+<<<<<<< HEAD
+            showMessage('MoodLift Assistant', data.response, 'bot');
+=======
+            showMessage('MindCare Assistant', data.response, 'bot');
+>>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
+            sessionId = data.session_id;
+
+            // Store session ID
+            localStorage.setItem('chat_session_id', sessionId);
+
+            // Handle crisis detection
+            if (data.crisis_detected) {
+                showCrisisAlert();
+            }
+        } else if (data.error) {
+            showMessage('System', `Error: ${data.error}`, 'bot');
+        }
+    } catch (error) {
+        console.error('Error sending chat:', error);
+        showMessage('System', 'Sorry, there was an error sending your message. Please try again.', 'bot');
+    }
+}
+
+function showMessage(sender, message, type) {
+    const messagesDiv = document.getElementById('chat-messages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${type}`;
+
+    const now = new Date();
+    const timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+    messageDiv.innerHTML = `
+        <div><strong>${sender}:</strong> ${message}</div>
+        <div class="message-time">${timeString}</div>
+    `;
+
+    messagesDiv.appendChild(messageDiv);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+function showCrisisAlert() {
+    const alertDiv = document.createElement('div');
+    alertDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #e74c3c;
+        color: white;
+        padding: 1rem;
+        border-radius: 5px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        z-index: 1001;
+        max-width: 300px;
+    `;
+
+    alertDiv.innerHTML = `
+        <strong>Crisis Support Alert</strong><br>
+        Help resources have been suggested. Please reach out to the emergency contacts provided.
+        <button onclick="this.parentElement.remove()" style="margin-top: 0.5rem; background: white; color: #e74c3c; border: none; padding: 0.25rem 0.5rem; border-radius: 3px; cursor: pointer;">Close</button>
+    `;
+
+    document.body.appendChild(alertDiv);
+
+    // Auto-remove after 10 seconds
+    setTimeout(() => {
+        if (alertDiv.parentElement) {
+            alertDiv.remove();
+        }
+    }, 10000);
+}
+
+function loadChatHistory() {
+    // Load any existing messages from localStorage (optional enhancement)
+    const history = localStorage.getItem(`chat_history_${sessionId}`);
+    if (history) {
+        const messages = JSON.parse(history);
+        messages.forEach(msg => {
+            showMessage(msg.sender, msg.message, msg.type);
+        });
+    }
+}
+
+function generateSessionId() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        const r = Math.random() * 16 | 0;
+        const v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+
+// Cleanup on page unload
+window.addEventListener('beforeunload', function() {
+    if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+    }
+    if (emotionInterval) {
+        clearInterval(emotionInterval);
+    }
+});
+</script>
+
+{% endblock %}

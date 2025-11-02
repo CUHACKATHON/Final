@@ -1,0 +1,635 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}1-Minute Anonymous Check-in - MoodLift{% endblock %}
+
+{% block content %}
+<div class="checkin-container">
+    <div class="checkin-header">
+        <div class="header-decoration">
+            <div class="decorative-circle circle-1"></div>
+            <div class="decorative-circle circle-2"></div>
+            <div class="decorative-circle circle-3"></div>
+        </div>
+        <h1>1-Minute Anonymous Mental Health Check-in</h1>
+        <p>Answer these 5 simple questions about how you've been feeling in the past week. This helps us understand your current emotional state.</p>
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="question-counter">
+                <span id="currentQuestion">1</span> of 5
+            </div>
+        </div>
+    </div>
+
+    <div class="question-container" id="questionContainer">
+        <!-- Questions will be loaded dynamically -->
+    </div>
+
+    <div class="navigation-buttons">
+        <button id="prevBtn" class="btn-secondary" disabled>
+            <span class="btn-icon">←</span>
+            <span class="btn-text">Previous</span>
+        </button>
+        <button id="nextBtn" class="btn-primary">
+            <span class="btn-text">Next</span>
+            <span class="btn-icon">→</span>
+        </button>
+        <button id="submitBtn" class="btn-primary submit-btn" style="display: none;">
+            <span class="btn-text">Get Results</span>
+            <span class="btn-icon">✨</span>
+        </button>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const questions = [
+        {
+            text: "Over the past week, how often have you felt nervous, anxious, or worried?",
+            options: [
+                { text: "Not at all", value: 0 },
+                { text: "Several days", value: 1 },
+                { text: "More than half the days", value: 2 },
+                { text: "Nearly every day", value: 3 }
+            ]
+        },
+        {
+            text: "Over the past week, how often have you felt down, depressed, or hopeless?",
+            options: [
+                { text: "Not at all", value: 0 },
+                { text: "Several days", value: 1 },
+                { text: "More than half the days", value: 2 },
+                { text: "Nearly every day", value: 3 }
+            ]
+        },
+        {
+            text: "Over the past week, how often have you felt little interest or pleasure in doing things you usually enjoy?",
+            options: [
+                { text: "Not at all", value: 0 },
+                { text: "Several days", value: 1 },
+                { text: "More than half the days", value: 2 },
+                { text: "Nearly every day", value: 3 }
+            ]
+        },
+        {
+            text: "Over the past week, how often have you felt irritable or easily annoyed?",
+            options: [
+                { text: "Not at all", value: 0 },
+                { text: "Several days", value: 1 },
+                { text: "More than half the days", value: 2 },
+                { text: "Nearly every day", value: 3 }
+            ]
+        },
+        {
+            text: "Over the past week, how often have you felt overwhelmed by your work, studies, or responsibilities?",
+            options: [
+                { text: "Not at all", value: 0 },
+                { text: "Several days", value: 1 },
+                { text: "More than half the days", value: 2 },
+                { text: "Nearly every day", value: 3 }
+            ]
+        }
+    ];
+
+    let currentQuestionIndex = 0;
+    let responses = new Array(questions.length).fill(null);
+    let sessionId = localStorage.getItem('chatSessionId') || generateSessionId();
+
+    const questionContainer = document.getElementById('questionContainer');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const progressFill = document.getElementById('progressFill');
+    const currentQuestionSpan = document.getElementById('currentQuestion');
+
+    function generateSessionId() {
+        const sessionId = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            const r = Math.random() * 16 | 0;
+            const v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+        localStorage.setItem('chatSessionId', sessionId);
+        return sessionId;
+    }
+
+    function showQuestion(index) {
+        const question = questions[index];
+        questionContainer.innerHTML = `
+            <div class="question">
+                <h3>${question.text}</h3>
+                <div class="options">
+                    ${question.options.map((option, optionIndex) => `
+                        <label class="option ${responses[index] === option.value ? 'selected' : ''}">
+                            <input type="radio" name="question${index}" value="${option.value}" ${responses[index] === option.value ? 'checked' : ''}>
+                            <span class="option-text">${option.text}</span>
+                        </label>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+
+        // Add event listeners to options
+        document.querySelectorAll(`input[name="question${index}"]`).forEach(input => {
+            input.addEventListener('change', function() {
+                responses[index] = parseInt(this.value);
+                updateOptionStyles(index);
+                updateNavigationButtons();
+            });
+        });
+
+        updateProgress();
+        updateNavigationButtons();
+    }
+
+    function updateOptionStyles(questionIndex) {
+        document.querySelectorAll(`input[name="question${questionIndex}"]`).forEach((input, index) => {
+            const label = input.parentElement;
+            if (input.checked) {
+                label.classList.add('selected');
+            } else {
+                label.classList.remove('selected');
+            }
+        });
+    }
+
+    function updateProgress() {
+        const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+        progressFill.style.width = `${progress}%`;
+        currentQuestionSpan.textContent = currentQuestionIndex + 1;
+    }
+
+    function updateNavigationButtons() {
+        prevBtn.disabled = currentQuestionIndex === 0;
+        nextBtn.style.display = currentQuestionIndex === questions.length - 1 ? 'none' : 'inline-block';
+        submitBtn.style.display = currentQuestionIndex === questions.length - 1 ? 'inline-block' : 'none';
+
+        // Enable/disable next/submit based on current answer
+        const hasAnswer = responses[currentQuestionIndex] !== null;
+        nextBtn.disabled = !hasAnswer;
+        submitBtn.disabled = !hasAnswer || responses.includes(null);
+    }
+
+    function nextQuestion() {
+        if (currentQuestionIndex < questions.length - 1) {
+            currentQuestionIndex++;
+            showQuestion(currentQuestionIndex);
+        }
+    }
+
+    function prevQuestion() {
+        if (currentQuestionIndex > 0) {
+            currentQuestionIndex--;
+            showQuestion(currentQuestionIndex);
+        }
+    }
+
+    function submitQuiz() {
+        if (responses.includes(null)) {
+            alert('Please answer all questions before submitting.');
+            return;
+        }
+
+        // Send data to backend
+        fetch('{% url "core:checkin_api" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({
+                responses: responses,
+                session_id: sessionId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Redirect to results page
+                window.location.href = '{% url "core:checkin_results" %}';
+            } else {
+                alert('Error: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+        });
+    }
+
+    // Event listeners
+    prevBtn.addEventListener('click', prevQuestion);
+    nextBtn.addEventListener('click', nextQuestion);
+    submitBtn.addEventListener('click', submitQuiz);
+
+    // Initialize first question
+    showQuestion(0);
+});
+</script>
+
+<style>
+.checkin-container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 3rem;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    position: relative;
+    overflow: hidden;
+}
+
+.checkin-container::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(102, 126, 234, 0.03) 0%, transparent 70%);
+    animation: rotate 20s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.checkin-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    position: relative;
+    z-index: 1;
+}
+
+.header-decoration {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 40px;
+}
+
+.decorative-circle {
+    position: absolute;
+    border-radius: 50%;
+    background: linear-gradient(45deg, rgba(102, 126, 234, 0.2), rgba(245, 87, 108, 0.2));
+    animation: float-decoration 4s ease-in-out infinite;
+}
+
+.circle-1 {
+    width: 12px;
+    height: 12px;
+    top: 10px;
+    left: 20px;
+    animation-delay: 0s;
+}
+
+.circle-2 {
+    width: 8px;
+    height: 8px;
+    top: 25px;
+    left: 50px;
+    animation-delay: 1s;
+}
+
+.circle-3 {
+    width: 10px;
+    height: 10px;
+    top: 5px;
+    left: 70px;
+    animation-delay: 2s;
+}
+
+@keyframes float-decoration {
+    0%, 100% { transform: translateY(0px) scale(1); }
+    50% { transform: translateY(-5px) scale(1.2); }
+}
+
+.checkin-header h1 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.checkin-header p {
+    color: #7f8c8d;
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+}
+
+.progress-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 12px;
+    background: linear-gradient(90deg, #e0e0e0 0%, #f8f9fa 100%);
+    border-radius: 6px;
+    margin: 0;
+    overflow: hidden;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    width: 0%;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 6px;
+    position: relative;
+}
+
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.question-counter {
+    font-size: 1.1rem;
+    color: #667eea;
+    font-weight: 600;
+    min-width: 60px;
+    text-align: center;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    border: 1px solid rgba(102, 126, 234, 0.2);
+}
+
+.question {
+    margin-bottom: 3rem;
+    position: relative;
+    z-index: 1;
+}
+
+.question h3 {
+    color: #34495e;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+    font-size: 1.4rem;
+    font-weight: 500;
+    text-align: center;
+    background: linear-gradient(135deg, #34495e, #667eea);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.options {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.option {
+    display: flex;
+    align-items: center;
+    padding: 1.5rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.option::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+    transition: left 0.5s;
+}
+
+.option:hover::before {
+    left: 100%;
+}
+
+.option:hover {
+    border-color: #667eea;
+    background: linear-gradient(135deg, #f8f9ff 0%, #ecf0f1 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.option.selected {
+    border-color: #667eea;
+    background: linear-gradient(135deg, #e8f0ff 0%, #d4e6f1 100%);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
+    transform: translateY(-2px);
+}
+
+.option.selected::after {
+    content: '✓';
+    position: absolute;
+    right: 1rem;
+    color: #667eea;
+    font-size: 1.2rem;
+    font-weight: bold;
+    animation: checkmark 0.3s ease-out;
+}
+
+@keyframes checkmark {
+    0% { transform: scale(0) rotate(180deg); opacity: 0; }
+    50% { transform: scale(1.2) rotate(90deg); opacity: 0.5; }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+.option input[type="radio"] {
+    display: none;
+}
+
+.option-text {
+    font-size: 1.1rem;
+    color: #2c3e50;
+    font-weight: 500;
+    flex: 1;
+}
+
+.navigation-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 3rem;
+    gap: 1rem;
+}
+
+.btn-primary, .btn-secondary {
+    padding: 1rem 2.5rem;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+    overflow: hidden;
+    min-width: 140px;
+    justify-content: center;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+}
+
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn-primary:hover:not(:disabled)::before {
+    left: 100%;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: linear-gradient(135deg, #5a67d8, #6b46c1);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
+}
+
+.btn-primary:disabled {
+    background: #bdc3c7;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+    color: white;
+    box-shadow: 0 8px 20px rgba(127, 140, 141, 0.3);
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background: linear-gradient(135deg, #7f8c8d, #6c7b7d);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(127, 140, 141, 0.4);
+}
+
+.btn-secondary:disabled {
+    background: #bdc3c7;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.submit-btn {
+    background: linear-gradient(135deg, #f093fb, #f5576c);
+    box-shadow: 0 8px 20px rgba(245, 87, 108, 0.3);
+}
+
+.submit-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, #e83e8c, #e53e3e);
+    box-shadow: 0 12px 30px rgba(245, 87, 108, 0.4);
+}
+
+.btn-icon {
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+}
+
+.btn-primary:hover .btn-icon {
+    transform: translateX(3px);
+}
+
+.btn-secondary:hover .btn-icon {
+    transform: translateX(-3px);
+}
+
+@media (max-width: 768px) {
+    .checkin-container {
+        margin: 1rem;
+        padding: 2rem 1.5rem;
+    }
+
+    .checkin-header h1 {
+        font-size: 2rem;
+    }
+
+    .checkin-header p {
+        font-size: 1rem;
+    }
+
+    .progress-container {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .progress-bar {
+        width: 100%;
+    }
+
+    .question-counter {
+        align-self: center;
+    }
+
+    .navigation-buttons {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .btn-primary, .btn-secondary {
+        width: 100%;
+        padding: 1.2rem;
+    }
+
+    .question h3 {
+        font-size: 1.2rem;
+    }
+
+    .option {
+        padding: 1.2rem;
+    }
+
+    .option-text {
+        font-size: 1rem;
+    }
+}
+</style>
+{% endblock %}

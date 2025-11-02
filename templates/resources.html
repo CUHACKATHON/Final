@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<<<<<<< HEAD
+{% block title %}Resources - MoodLift{% endblock %}
+=======
+{% block title %}Resources - MindCare{% endblock %}
+>>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Mental Health Resources</h1>
+        <p>Culturally contextualized and multilingual resources for Indian students</p>
+    </div>
+
+    <div class="resources-filters">
+        <form method="get" class="filter-form">
+            <div class="filter-group">
+                <label for="type">Filter by Type:</label>
+                <select name="type" id="type" class="form-control">
+                    <option value="">All Types</option>
+                    <option value="video" {% if selected_type == 'video' %}selected{% endif %}>Videos</option>
+                    <option value="meditation" {% if selected_type == 'meditation' %}selected{% endif %}>Meditations</option>
+                    <option value="article" {% if selected_type == 'article' %}selected{% endif %}>Articles</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="language">Filter by Language:</label>
+                <select name="language" id="language" class="form-control">
+                    <option value="">All Languages</option>
+                    <option value="en" {% if selected_language == 'en' %}selected{% endif %}>English</option>
+                    <option value="hi" {% if selected_language == 'hi' %}selected{% endif %}>Hindi</option>
+                    <option value="ta" {% if selected_language == 'ta' %}selected{% endif %}>Tamil</option>
+                    <option value="te" {% if selected_language == 'te' %}selected{% endif %}>Telugu</option>
+                    <option value="kn" {% if selected_language == 'kn' %}selected{% endif %}>Kannada</option>
+                    <option value="mr" {% if selected_language == 'mr' %}selected{% endif %}>Marathi</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn-secondary">Apply Filters</button>
+            <a href="{% url 'core:resources' %}" class="btn-link">Clear Filters</a>
+        </form>
+    </div>
+
+    <div class="resources-grid">
+        {% if resources %}
+            {% for resource in resources %}
+                <div class="resource-card">
+                    <div class="resource-type-badge {{ resource.type }}">
+                        {{ resource.get_type_display }}
+                    </div>
+                    <h3>{{ resource.title }}</h3>
+                    <p class="resource-description">{{ resource.description }}</p>
+                    <div class="resource-meta">
+                        <span class="language-badge">{{ resource.get_language_display }}</span>
+                        <span class="resource-date">{{ resource.created_at|date:"M d, Y" }}</span>
+                    </div>
+                    {% if resource.type == 'video' %}
+                        <div class="resource-content">
+                            {% if resource.file_path %}
+<<<<<<< HEAD
+                                {% if 'youtube.com' in resource.file_path or 'youtu.be' in resource.file_path %}
+                                    {# Convert YouTube URL to embed format if needed #}
+                                    {% if '/embed/' in resource.file_path %}
+                                        <iframe src="{{ resource.file_path }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width: 100%; height: 315px; border-radius: 8px;"></iframe>
+                                    {% else %}
+                                        {# Handle regular YouTube URLs #}
+                                        {% if 'watch?v=' in resource.file_path %}
+                                            {% with video_id=resource.file_path|slice:"32:"|slice:":11" %}
+                                            <iframe src="https://www.youtube.com/embed/{{ video_id }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width: 100%; height: 315px; border-radius: 8px;"></iframe>
+                                            {% endwith %}
+                                        {% else %}
+                                            <iframe src="{{ resource.file_path }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width: 100%; height: 315px; border-radius: 8px;"></iframe>
+                                        {% endif %}
+                                    {% endif %}
+                                {% else %}
+                                    <iframe src="{{ resource.file_path }}" frameborder="0" allowfullscreen style="width: 100%; height: 315px; border-radius: 8px;"></iframe>
+                                {% endif %}
+=======
+                                <iframe src="{{ resource.file_path }}" frameborder="0" allowfullscreen></iframe>
+>>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
+                            {% else %}
+                                <p class="placeholder">Video content will be displayed here</p>
+                            {% endif %}
+                        </div>
+                    {% elif resource.type == 'meditation' %}
+                        <div class="resource-content">
+<<<<<<< HEAD
+                            {% if 'youtube.com' in resource.file_path or 'youtu.be' in resource.file_path %}
+                                {# YouTube meditation/audio - embed as video #}
+                                {% if '/embed/' in resource.file_path %}
+                                    <iframe src="{{ resource.file_path }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width: 100%; height: 315px; border-radius: 8px;"></iframe>
+                                {% else %}
+                                    {# Handle regular YouTube URLs for meditation #}
+                                    {% if 'watch?v=' in resource.file_path %}
+                                        {% with video_id=resource.file_path|slice:"32:"|slice:":11" %}
+                                        <iframe src="https://www.youtube.com/embed/{{ video_id }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width: 100%; height: 315px; border-radius: 8px;"></iframe>
+                                        {% endwith %}
+                                    {% else %}
+                                        <iframe src="{{ resource.file_path }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width: 100%; height: 315px; border-radius: 8px;"></iframe>
+                                    {% endif %}
+                                {% endif %}
+                            {% else %}
+                                {# Regular audio file #}
+                                <audio controls class="meditation-player" style="width: 100%;">
+                                    <source src="{{ resource.file_path }}" type="audio/mpeg">
+                                    Your browser does not support the audio element.
+                                </audio>
+                            {% endif %}
+=======
+                            <audio controls class="meditation-player">
+                                <source src="{{ resource.file_path }}" type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
+>>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
+                        </div>
+                    {% elif resource.type == 'article' %}
+                        <div class="resource-content">
+                            <a href="{{ resource.file_path }}" target="_blank" class="btn-primary">Read Article</a>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="no-resources">
+                <p>No resources found matching your filters. Try adjusting your search criteria.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+

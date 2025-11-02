@@ -1,0 +1,792 @@
+{
+  "tech_stack": [
+    "Python",
+    "Django",
+    "Django REST Framework",
+    "JWT (JSON Web Tokens)",
+    "SQLite",
+    "HTML/CSS/JavaScript",
+    "Chart.js"
+  ],
+  "features": [
+    {
+      "name": "Landing Page",
+      "description": "Homepage with statistics, feature overview, and navigation to all sections",
+      "files": ["templates/index.html", "core/views.py"],
+      "api_doc": {
+        "path": "/",
+        "method": "GET",
+        "summary": "Display landing page with mental health statistics and features"
+      }
+    },
+    {
+      "name": "Anonymous Chat API",
+      "description": "AI-powered chatbot for anonymous mental health support with crisis detection",
+      "files": ["core/views.py", "core/utils/chatbot_logic.py", "templates/chat.html", "static/js/chatbot.js"],
+      "api_doc": {
+        "paths": {
+          "/chat/": {
+            "get": {
+              "summary": "Display anonymous chat interface",
+              "responses": {
+                "200": {
+                  "description": "Chat interface page"
+                }
+              }
+            }
+          },
+          "/api/chat/": {
+            "post": {
+              "summary": "Process chat message and return AI response",
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "description": "User message"
+                        },
+                        "session_id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "description": "Optional session ID for continuing conversation"
+                        }
+                      },
+                      "required": ["message"]
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "description": "Chatbot response",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "response": {
+                            "type": "string",
+                            "description": "Chatbot response text"
+                          },
+                          "session_id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "description": "Session ID"
+                          },
+                          "crisis_detected": {
+                            "type": "boolean",
+                            "description": "Whether crisis was detected"
+                          },
+                          "suggested_action": {
+                            "type": "string",
+                            "description": "Suggested action (book_appointment, suggest_counseling, null)"
+                          },
+                          "timestamp": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "Message timestamp"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "400": {
+                  "description": "Bad request"
+                },
+                "500": {
+                  "description": "Server error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Authentication",
+      "description": "Token-based JWT authentication and session-based login for web interface",
+      "files": ["core/views.py", "core/forms.py", "core/serializers.py", "templates/registration/login.html"],
+      "api_doc": {
+        "paths": {
+          "/login/": {
+            "get": {
+              "summary": "Display login page (web interface)",
+              "responses": {
+                "200": {
+                  "description": "Login form page"
+                }
+              }
+            },
+            "post": {
+              "summary": "Authenticate user (session-based for web)",
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "application/x-www-form-urlencoded": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "username": {
+                          "type": "string"
+                        },
+                        "password": {
+                          "type": "string",
+                          "format": "password"
+                        }
+                      },
+                      "required": ["username", "password"]
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "302": {
+                  "description": "Redirect to dashboard on success"
+                },
+                "200": {
+                  "description": "Login page with errors on failure"
+                }
+              }
+            }
+          },
+          "/api/auth/login/": {
+            "post": {
+              "summary": "API login endpoint (returns JWT tokens)",
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "username": {
+                          "type": "string"
+                        },
+                        "password": {
+                          "type": "string",
+                          "format": "password"
+                        }
+                      },
+                      "required": ["username", "password"]
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "description": "Login successful",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "access": {
+                            "type": "string",
+                            "description": "JWT access token"
+                          },
+                          "refresh": {
+                            "type": "string",
+                            "description": "JWT refresh token"
+                          },
+                          "user": {
+                            "type": "object",
+                            "properties": {
+                              "id": {"type": "integer"},
+                              "username": {"type": "string"},
+                              "email": {"type": "string"},
+                              "role": {"type": "string"},
+                              "is_verified": {"type": "boolean"}
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "401": {
+                  "description": "Invalid credentials"
+                }
+              }
+            }
+          },
+          "/api/token/": {
+            "post": {
+              "summary": "Standard JWT token obtain endpoint",
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "username": {"type": "string"},
+                        "password": {"type": "string"}
+                      },
+                      "required": ["username", "password"]
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "description": "Tokens issued",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "access": {"type": "string"},
+                          "refresh": {"type": "string"}
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "/api/token/refresh/": {
+            "post": {
+              "summary": "Refresh access token",
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "refresh": {"type": "string"}
+                      },
+                      "required": ["refresh"]
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "description": "New access token issued"
+                }
+              }
+            }
+          },
+          "/logout/": {
+            "get": {
+              "summary": "Logout user (session-based)",
+              "security": [{"sessionAuth": []}],
+              "responses": {
+                "302": {
+                  "description": "Redirect to home page"
+                }
+              }
+            }
+          },
+          "/api/auth/logout/": {
+            "post": {
+              "summary": "API logout (blacklist refresh token)",
+              "security": [{"bearerAuth": []}],
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "refresh_token": {"type": "string"}
+                      }
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "description": "Successfully logged out"
+                }
+              }
+            }
+          }
+        },
+        "components": {
+          "securitySchemes": {
+            "bearerAuth": {
+              "type": "http",
+              "scheme": "bearer",
+              "bearerFormat": "JWT"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Appointment Booking",
+      "description": "Book and manage counselor appointments",
+      "files": ["core/views.py", "core/forms.py", "templates/appointments.html"],
+      "api_doc": {
+        "paths": {
+          "/appointments/": {
+            "get": {
+              "summary": "Display appointment booking form",
+              "responses": {
+                "200": {
+                  "description": "Appointment booking page"
+                }
+              }
+            },
+            "post": {
+              "summary": "Create new appointment",
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "application/x-www-form-urlencoded": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "counselor": {
+                          "type": "integer",
+                          "description": "Counselor user ID"
+                        },
+                        "appointment_date": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Preferred appointment date and time"
+                        },
+                        "reason": {
+                          "type": "string",
+                          "description": "Optional reason for appointment"
+                        },
+                        "session_id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "description": "Optional chat session ID"
+                        }
+                      },
+                      "required": ["counselor", "appointment_date"]
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "302": {
+                  "description": "Redirect on success"
+                },
+                "200": {
+                  "description": "Form page with errors on failure"
+                }
+              }
+            }
+          },
+          "/appointments/manage/": {
+            "get": {
+              "summary": "List all appointments (admin/counselor only)",
+              "security": [{"sessionAuth": []}],
+              "responses": {
+                "200": {
+                  "description": "Appointments management page"
+                },
+                "302": {
+                  "description": "Redirect to login if not authenticated"
+                }
+              }
+            }
+          },
+          "/api/appointments/{appointment_id}/update/": {
+            "post": {
+              "summary": "Update appointment status",
+              "security": [{"sessionAuth": []}],
+              "parameters": [
+                {
+                  "name": "appointment_id",
+                  "in": "path",
+                  "required": true,
+                  "schema": {
+                    "type": "integer"
+                  }
+                }
+              ],
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": ["pending", "confirmed", "completed", "cancelled"]
+                        },
+                        "notes": {
+                          "type": "string",
+                          "description": "Optional counselor notes"
+                        }
+                      },
+                      "required": ["status"]
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "description": "Update successful"
+                },
+                "403": {
+                  "description": "Permission denied"
+                },
+                "400": {
+                  "description": "Invalid status"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Resources",
+      "description": "Browse educational resources (videos, meditations, articles) with filtering",
+      "files": ["core/views.py", "templates/resources.html"],
+      "api_doc": {
+        "paths": {
+          "/resources/": {
+            "get": {
+              "summary": "Display resources page with optional filters",
+              "parameters": [
+                {
+                  "name": "type",
+                  "in": "query",
+                  "schema": {
+                    "type": "string",
+                    "enum": ["video", "meditation", "article"]
+                  },
+                  "description": "Filter by resource type"
+                },
+                {
+                  "name": "language",
+                  "in": "query",
+                  "schema": {
+                    "type": "string",
+                    "enum": ["en", "hi", "ta", "te", "kn", "mr"]
+                  },
+                  "description": "Filter by language"
+                }
+              ],
+              "responses": {
+                "200": {
+                  "description": "Resources page with filtered results"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Forum",
+      "description": "Anonymous peer support forum with posts and replies",
+      "files": ["core/views.py", "templates/forum.html", "templates/forum_post_detail.html", "static/js/forum.js"],
+      "api_doc": {
+        "paths": {
+          "/forum/": {
+            "get": {
+              "summary": "Display forum with approved posts",
+              "responses": {
+                "200": {
+                  "description": "Forum page with list of posts"
+                }
+              }
+            }
+          },
+          "/forum/post/{post_id}/": {
+            "get": {
+              "summary": "Display forum post with replies",
+              "parameters": [
+                {
+                  "name": "post_id",
+                  "in": "path",
+                  "required": true,
+                  "schema": {
+                    "type": "integer"
+                  }
+                }
+              ],
+              "responses": {
+                "200": {
+                  "description": "Post detail page"
+                },
+                "404": {
+                  "description": "Post not found"
+                }
+              }
+            }
+          },
+          "/api/forum/posts/": {
+            "post": {
+              "summary": "Create anonymous forum post",
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "session_id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "description": "Optional session ID"
+                        },
+                        "title": {
+                          "type": "string",
+                          "description": "Post title"
+                        },
+                        "content": {
+                          "type": "string",
+                          "description": "Post content"
+                        }
+                      },
+                      "required": ["title", "content"]
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "description": "Post created successfully (pending moderation)"
+                },
+                "400": {
+                  "description": "Bad request"
+                },
+                "500": {
+                  "description": "Server error"
+                }
+              }
+            }
+          },
+          "/api/forum/posts/{post_id}/replies/": {
+            "post": {
+              "summary": "Create reply to forum post",
+              "parameters": [
+                {
+                  "name": "post_id",
+                  "in": "path",
+                  "required": true,
+                  "schema": {
+                    "type": "integer"
+                  }
+                }
+              ],
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "session_id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "description": "Optional session ID"
+                        },
+                        "content": {
+                          "type": "string",
+                          "description": "Reply content"
+                        }
+                      },
+                      "required": ["content"]
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "description": "Reply created successfully (pending moderation)"
+                },
+                "400": {
+                  "description": "Bad request"
+                },
+                "404": {
+                  "description": "Post not found"
+                }
+              }
+            }
+          },
+          "/forum/moderate/": {
+            "get": {
+              "summary": "Display moderation queue (admin only)",
+              "security": [{"sessionAuth": []}],
+              "responses": {
+                "200": {
+                  "description": "Moderation page"
+                },
+                "302": {
+                  "description": "Redirect to login if not authenticated"
+                }
+              }
+            }
+          },
+          "/api/forum/{item_type}/{item_id}/approve/": {
+            "post": {
+              "summary": "Approve forum post or reply (admin only, token-based)",
+              "security": [{"bearerAuth": []}],
+              "parameters": [
+                {
+                  "name": "item_type",
+                  "in": "path",
+                  "required": true,
+                  "schema": {
+                    "type": "string",
+                    "enum": ["post", "reply"]
+                  }
+                },
+                {
+                  "name": "item_id",
+                  "in": "path",
+                  "required": true,
+                  "schema": {
+                    "type": "integer"
+                  }
+                }
+              ],
+              "responses": {
+                "200": {
+                  "description": "Item approved successfully"
+                },
+                "403": {
+                  "description": "Permission denied"
+                },
+                "400": {
+                  "description": "Invalid item type"
+                }
+              }
+            }
+          },
+          "/api/forum/{item_type}/{item_id}/delete/": {
+            "post": {
+              "summary": "Delete forum post or reply (admin only, token-based)",
+              "security": [{"bearerAuth": []}],
+              "parameters": [
+                {
+                  "name": "item_type",
+                  "in": "path",
+                  "required": true,
+                  "schema": {
+                    "type": "string",
+                    "enum": ["post", "reply"]
+                  }
+                },
+                {
+                  "name": "item_id",
+                  "in": "path",
+                  "required": true,
+                  "schema": {
+                    "type": "integer"
+                  }
+                }
+              ],
+              "responses": {
+                "200": {
+                  "description": "Item deleted successfully"
+                },
+                "403": {
+                  "description": "Permission denied"
+                },
+                "400": {
+                  "description": "Invalid item type"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Admin Dashboard",
+      "description": "Analytics dashboard for administrators and counselors",
+      "files": ["core/views.py", "templates/dashboard.html", "static/js/dashboard.js"],
+      "api_doc": {
+        "paths": {
+          "/dashboard/": {
+            "get": {
+              "summary": "Display admin dashboard with analytics",
+              "security": [{"sessionAuth": []}],
+              "responses": {
+                "200": {
+                  "description": "Dashboard page with statistics and charts"
+                },
+                "302": {
+                  "description": "Redirect to login if not authenticated"
+                }
+              }
+            }
+          },
+          "/api/dashboard/stats/": {
+            "get": {
+              "summary": "Get dashboard statistics (JSON, token-based)",
+              "security": [{"bearerAuth": []}],
+              "responses": {
+                "200": {
+                  "description": "Dashboard statistics",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "total_sessions": {
+                            "type": "integer"
+                          },
+                          "total_appointments": {
+                            "type": "integer"
+                          },
+                          "pending_appointments": {
+                            "type": "integer"
+                          },
+                          "unmoderated_posts": {
+                            "type": "integer"
+                          },
+                          "chart_data": {
+                            "type": "object",
+                            "properties": {
+                              "dates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "sessions": {
+                                "type": "array",
+                                "items": {
+                                  "type": "integer"
+                                }
+                              },
+                              "anxiety": {
+                                "type": "array",
+                                "items": {
+                                  "type": "integer"
+                                }
+                              },
+                              "depression": {
+                                "type": "array",
+                                "items": {
+                                  "type": "integer"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "403": {
+                  "description": "Permission denied"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}
+

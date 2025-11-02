@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<<<<<<< HEAD
+{% block title %}{{ post.title }} - MoodLift Forum{% endblock %}
+=======
+{% block title %}{{ post.title }} - MindCare Forum{% endblock %}
+>>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
+
+{% block content %}
+<div class="container">
+    <div class="forum-post-detail">
+        <a href="{% url 'core:forum' %}" class="back-link">← Back to Forum</a>
+        
+<<<<<<< HEAD
+        <div class="forum-post-full" data-post-id="{{ post.id }}">
+=======
+        <div class="forum-post-full">
+>>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
+            <h1>{{ post.title }}</h1>
+            <p class="post-meta">{{ post.timestamp|date:"M d, Y g:i A" }}</p>
+            <div class="post-content">
+                {{ post.content|linebreaks }}
+            </div>
+<<<<<<< HEAD
+            <div class="post-actions-detail">
+                <button class="like-btn {% if is_liked %}liked{% endif %}" data-post-id="{{ post.id }}" title="Like this post">
+                    <span class="like-icon">{% if is_liked %}❤️{% else %}🤍{% endif %}</span>
+                    <span class="likes-count">{{ post.likes_count }}</span>
+                    <span class="like-text">Like</span>
+                </button>
+                <button class="share-btn" data-post-id="{{ post.id }}" title="Share this post">
+                    <span class="share-icon">🔗</span>
+                    <span class="shares-count">{{ post.shares_count }}</span>
+                    <span class="share-text">Share</span>
+                </button>
+            </div>
+=======
+>>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
+        </div>
+
+        <div class="forum-replies">
+            <h2>Replies ({{ post.replies_count }})</h2>
+            
+            {% if replies %}
+                {% for reply in replies %}
+                    <div class="forum-reply">
+                        <div class="reply-content">{{ reply.content|linebreaks }}</div>
+                        <p class="reply-meta">{{ reply.timestamp|date:"M d, Y g:i A" }}</p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="no-replies">No replies yet. Be the first to respond!</p>
+            {% endif %}
+        </div>
+
+        <div class="reply-form-container">
+            <h3>Add a Reply</h3>
+            <form id="reply-form">
+                {% csrf_token %}
+                <input type="hidden" id="post-id" value="{{ post.id }}">
+                <div class="form-group">
+                    <textarea id="reply-content" class="form-control" rows="4" required placeholder="Share your thoughts..."></textarea>
+                </div>
+                <button type="submit" class="btn-primary">Submit Reply</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/forum.js' %}"></script>
+{% endblock %}
+

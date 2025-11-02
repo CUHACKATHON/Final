@@ -1,0 +1,582 @@
+[
+  {
+    "id": "TC001",
+    "title": "Landing Page Load and Content Verification",
+    "description": "Verify that the landing page loads successfully and displays mental health statistics, platform overview, and navigation links.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the landing page URL."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the page loads with HTTP 200 status."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify presence of mental health statistics section."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify platform overview text is displayed."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify navigation links to chat, appointments, resources, forum, and dashboard are present."
+      }
+    ]
+  },
+  {
+    "id": "TC002",
+    "title": "Anonymous AI Chatbot Normal Flow",
+    "description": "Test that a student can send a message to the AI chatbot and receive a relevant response with session persistence.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the anonymous chat interface."
+      },
+      {
+        "type": "action",
+        "description": "Send an initial message to the chatbot without a session ID."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify chatbot returns a valid response text, a session ID, and no crisis detection for normal query."
+      },
+      {
+        "type": "action",
+        "description": "Send a follow-up message with the received session ID."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify chatbot continues the conversation and maintains context associated with the session ID."
+      }
+    ]
+  },
+  {
+    "id": "TC003",
+    "title": "AI Chatbot Crisis Detection and Suggested Action",
+    "description": "Verify that the AI chatbot detects crisis keywords and suggests appropriate actions like booking appointment or counseling.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Send a message containing crisis indicators (e.g., suicidal thoughts) to the chatbot."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify chatbot response flags crisis_detected as true."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify suggested_action field contains either 'book_appointment' or 'suggest_counseling'."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify response timestamp is valid and matches the message sent time."
+      }
+    ]
+  },
+  {
+    "id": "TC004",
+    "title": "Login Functionality - Successful Authentication",
+    "description": "Verify that admin/counselor users can login with valid credentials and are redirected to the dashboard.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the login page."
+      },
+      {
+        "type": "action",
+        "description": "Enter valid username and password."
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify redirection to dashboard page."
+      }
+    ]
+  },
+  {
+    "id": "TC005",
+    "title": "Login Functionality - Failure with Invalid Credentials",
+    "description": "Verify that login fails and error messages are displayed when invalid credentials are submitted.",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the login page."
+      },
+      {
+        "type": "action",
+        "description": "Enter invalid username and/or password."
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the login page reloads with appropriate error messages."
+      }
+    ]
+  },
+  {
+    "id": "TC006",
+    "title": "Logout Functionality",
+    "description": "Verify that logged-in users can logout and are redirected to the home page.",
+    "category": "security",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as an admin or counselor user."
+      },
+      {
+        "type": "action",
+        "description": "Trigger logout via logout link or URL."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify redirection to the landing page."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user session is terminated."
+      }
+    ]
+  },
+  {
+    "id": "TC007",
+    "title": "Counseling Appointment Booking Normal Flow",
+    "description": "Verify students can confidentially book counseling appointments with valid input data.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the appointment booking page."
+      },
+      {
+        "type": "action",
+        "description": "Fill in required fields: select counselor, choose appointment date/time."
+      },
+      {
+        "type": "action",
+        "description": "Optionally provide a reason and session ID."
+      },
+      {
+        "type": "action",
+        "description": "Submit the booking form."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify user is redirected or shown confirmation of successful booking."
+      }
+    ]
+  },
+  {
+    "id": "TC008",
+    "title": "Appointment Booking Validation Failures",
+    "description": "Verify that booking form enforces required fields and reports errors when inputs are invalid or incomplete.",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the appointment booking page."
+      },
+      {
+        "type": "action",
+        "description": "Submit the form empty or with invalid date/time format."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify validation errors are displayed indicating missing or invalid fields."
+      }
+    ]
+  },
+  {
+    "id": "TC009",
+    "title": "Admin Appointment Management Access Control",
+    "description": "Verify that only authenticated admin or counselor users can access the appointment management page.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Attempt to navigate to '/appointments/manage/' as an unauthenticated user."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify redirection to login page occurs."
+      },
+      {
+        "type": "action",
+        "description": "Login as a valid admin or counselor user."
+      },
+      {
+        "type": "action",
+        "description": "Navigate to '/appointments/manage/'."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the appointments management page loads with HTTP 200."
+      }
+    ]
+  },
+  {
+    "id": "TC010",
+    "title": "Update Appointment Status Validations",
+    "description": "Verify appointment status updates work correctly with valid statuses and handle invalid inputs or permissions.",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as authorized user."
+      },
+      {
+        "type": "action",
+        "description": "Send POST request to update appointment status with valid status values ('pending', 'confirmed', 'completed', 'cancelled')."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify response status 200 indicates successful update."
+      },
+      {
+        "type": "action",
+        "description": "Attempt to update appointment status with invalid status value."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify response status 400 indicates invalid input."
+      },
+      {
+        "type": "action",
+        "description": "Attempt to update appointment status as unauthorized or unauthenticated user."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify response status 403 indicates permission denied."
+      }
+    ]
+  },
+  {
+    "id": "TC011",
+    "title": "Psychoeducational Resources Filtering",
+    "description": "Verify resource page filters content correctly by type (video, meditation, article) and language (en, hi, ta, te, kn, mr).",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to resources page without filters."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify all resource types and languages are listed."
+      },
+      {
+        "type": "action",
+        "description": "Apply filter by resource type 'video'."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify only video resources are displayed."
+      },
+      {
+        "type": "action",
+        "description": "Apply filter by language 'hi' (Hindi)."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify resources are filtered to type and language correctly."
+      }
+    ]
+  },
+  {
+    "id": "TC012",
+    "title": "Forum Post Creation and Moderation Workflow",
+    "description": "Verify anonymous users can create forum posts which enter moderation queue, then admins can approve or delete them.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Send POST request to /api/forum/posts/ with valid title and content, optional session ID."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify response indicates post created successfully with pending moderation."
+      },
+      {
+        "type": "action",
+        "description": "Login as admin user and access moderation queue."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the newly created post appears in moderation queue."
+      },
+      {
+        "type": "action",
+        "description": "Approve the post via API."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify post status updates and it becomes visible in forum."
+      },
+      {
+        "type": "action",
+        "description": "Delete a post via API and verify it is removed."
+      }
+    ]
+  },
+  {
+    "id": "TC013",
+    "title": "Forum Reply Creation and Moderation",
+    "description": "Verify anonymous users can reply to forum posts, replies enter moderation queue, admins can approve or delete replies.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Send POST request to /api/forum/posts/{post_id}/replies/ with valid reply content and optional session ID."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify reply creation succeeds with pending moderation."
+      },
+      {
+        "type": "action",
+        "description": "Login as admin and access moderation queue."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify reply appears in moderation queue."
+      },
+      {
+        "type": "action",
+        "description": "Approve the reply via API."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify reply becomes visible under the post."
+      },
+      {
+        "type": "action",
+        "description": "Delete a reply and verify removal."
+      }
+    ]
+  },
+  {
+    "id": "TC014",
+    "title": "Forum Access and Content Visibility",
+    "description": "Verify that only approved posts and replies are visible in the forum to anonymous users, and non-existent posts return 404.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Access the forum page as a user."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify only approved posts are displayed."
+      },
+      {
+        "type": "action",
+        "description": "Access a post detail page with approved post ID."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify post content and approved replies are displayed."
+      },
+      {
+        "type": "action",
+        "description": "Access a post detail page with a non-existent post ID."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a 404 not found response is returned."
+      }
+    ]
+  },
+  {
+    "id": "TC015",
+    "title": "Forum Moderation Access Control",
+    "description": "Verify that only logged-in admins can access the forum moderation queue and perform approve/delete actions.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Attempt to access /forum/moderate/ as an unauthenticated user."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify redirection to login page."
+      },
+      {
+        "type": "action",
+        "description": "Login as a non-admin user and attempt to approve or delete forum content."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify permission denied (403) responses."
+      },
+      {
+        "type": "action",
+        "description": "Login as admin user and access moderation queue."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify moderation page loads with HTTP 200."
+      }
+    ]
+  },
+  {
+    "id": "TC016",
+    "title": "Admin Dashboard Access and Data Accuracy",
+    "description": "Verify that only authenticated admins/counselors can access the dashboard and the displayed analytics data is accurate and correctly formatted.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Attempt to access the dashboard page without authentication."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify redirection to login page."
+      },
+      {
+        "type": "action",
+        "description": "Login as a valid admin or counselor user."
+      },
+      {
+        "type": "action",
+        "description": "Navigate to the dashboard page."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the page loads successfully."
+      },
+      {
+        "type": "action",
+        "description": "Call the /api/dashboard/stats/ endpoint."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the JSON response contains total sessions, total appointments, pending appointments, unmoderated posts, and chart data arrays."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify chart data arrays have coherent length and valid content."
+      }
+    ]
+  },
+  {
+    "id": "TC017",
+    "title": "Multi-language Support in Resources",
+    "description": "Verify psychoeducational resources are correctly served in multiple supported Indian languages and filtering works per language.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to resources page with language filter set to each supported language (en, hi, ta, te, kn, mr) one by one."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify resources displayed correspond to the selected language."
+      }
+    ]
+  },
+  {
+    "id": "TC018",
+    "title": "Error Handling for Chat API Invalid Inputs",
+    "description": "Verify that sending malformed or missing required fields in the chat API /api/chat/ POST request returns proper 400 errors.",
+    "category": "error handling",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Send a POST request to /api/chat/ with empty JSON body."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the response status is 400 Bad Request."
+      },
+      {
+        "type": "action",
+        "description": "Send a POST request with message field missing or null."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the response status is 400 Bad Request."
+      }
+    ]
+  },
+  {
+    "id": "TC019",
+    "title": "Error Handling for Appointment Status Update API",
+    "description": "Verify that appointment update API returns 400 error for invalid status and 403 for unauthorized access.",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as authorized user and send POST to appointment update API with an invalid status value."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify response status is 400."
+      },
+      {
+        "type": "action",
+        "description": "Send the same request without authentication."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify response status is 403 permission denied."
+      }
+    ]
+  },
+  {
+    "id": "TC020",
+    "title": "Forum API Error Handling for Non-existent Posts",
+    "description": "Verify that replying to or fetching details of a non-existent forum post returns appropriate error responses.",
+    "category": "error handling",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Send GET request to /forum/post/{invalid_post_id}/ where invalid_post_id does not exist."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify response status is 404 Not Found."
+      },
+      {
+        "type": "action",
+        "description": "Send POST reply to /api/forum/posts/{invalid_post_id}/replies/ with valid content."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify response status is 404 Not Found."
+      }
+    ]
+  }
+]
