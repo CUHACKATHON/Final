@@ -52,7 +52,6 @@ class ResourceAdmin(admin.ModelAdmin):
 
 @admin.register(ForumPost)
 class ForumPostAdmin(admin.ModelAdmin):
-<<<<<<< HEAD
     list_display = ['title', 'moderated', 'replies_count', 'likes_count', 'shares_count', 'timestamp']
     list_filter = ['moderated', 'timestamp']
     search_fields = ['title', 'content']
@@ -69,12 +68,6 @@ class ForumPostShareAdmin(admin.ModelAdmin):
     list_filter = ['share_platform', 'timestamp']
     readonly_fields = ['timestamp']
 
-=======
-    list_display = ['title', 'moderated', 'replies_count', 'timestamp']
-    list_filter = ['moderated', 'timestamp']
-    search_fields = ['title', 'content']
-
->>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
 @admin.register(ForumReply)
 class ForumReplyAdmin(admin.ModelAdmin):
     list_display = ['post', 'content_preview', 'moderated', 'timestamp']

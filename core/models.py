@@ -61,11 +61,7 @@ class Appointment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-<<<<<<< HEAD
         ordering = ['-appointment_date']
-=======
-        ordering = ['appointment_date']
->>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
 
     def __str__(self):
         return f"Appointment with {self.counselor.username} on {self.appointment_date}"
@@ -108,18 +104,14 @@ class ForumPost(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     moderated = models.BooleanField(default=False)
     replies_count = models.IntegerField(default=0)
-<<<<<<< HEAD
     likes_count = models.IntegerField(default=0)
     shares_count = models.IntegerField(default=0)
-=======
->>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
 
     class Meta:
         ordering = ['-timestamp']
 
     def __str__(self):
         return f"{self.title} (Moderated: {self.moderated})"
-<<<<<<< HEAD
     
     def get_likes_count(self):
         """Get the actual count of likes"""
@@ -129,8 +121,6 @@ class ForumPost(models.Model):
         """Update the cached likes count"""
         self.likes_count = self.get_likes_count()
         self.save(update_fields=['likes_count'])
-=======
->>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
 
 
 class ForumReply(models.Model):
@@ -156,7 +146,6 @@ class ForumReply(models.Model):
             self.post.save(update_fields=['replies_count'])
 
 
-<<<<<<< HEAD
 class ForumPostLike(models.Model):
     """Anonymous likes on forum posts - tracked by session"""
     post = models.ForeignKey(ForumPost, on_delete=models.CASCADE, related_name='likes')
@@ -204,8 +193,6 @@ class ForumPostShare(models.Model):
             self.post.save(update_fields=['shares_count'])
 
 
-=======
->>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
 class Analytics(models.Model):
     """Aggregated statistics for dashboard"""
     date = models.DateField(unique=True, default=timezone.now)

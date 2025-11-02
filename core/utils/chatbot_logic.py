@@ -1,17 +1,11 @@
 """
-<<<<<<< HEAD
 MindCare Assistant - AI Chatbot for Student Mental Health Support
 A supportive friend and wellness guide for Indian college students
 Multilingual support with OpenAI GPT integration (Psychiatrist Perspective)
-=======
-Simulated AI Chatbot with rule-based responses
-Evidence-based coping strategies for Indian college students
->>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
 """
 
 import re
 import random
-<<<<<<< HEAD
 import os
 from datetime import datetime
 from langdetect import detect
@@ -86,81 +80,46 @@ def detect_intent(message, language='en'):
     if any(keyword in message_lower for keyword in non_mental_health_keywords):
         return 'off_topic'
 
-=======
-from datetime import datetime
-
-
-def detect_intent(message):
-    """Detect user intent from message"""
-    message_lower = message.lower()
-    
->>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
     # Greetings
     greetings = ['hello', 'hi', 'hey', 'namaste', 'good morning', 'good afternoon', 'good evening']
     if any(word in message_lower for word in greetings):
         return 'greeting'
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
     # Crisis detection - highest priority
     crisis_keywords = ['suicide', 'kill myself', 'end my life', 'die', 'hurt myself', 'self harm', 'suicidal']
     if any(word in message_lower for word in crisis_keywords):
         return 'crisis'
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
     # Anxiety
     anxiety_keywords = ['anxious', 'anxiety', 'worried', 'panic', 'nervous', 'stress', 'stressed', 'overwhelmed', 'tension']
     if any(word in message_lower for word in anxiety_keywords):
         return 'anxiety'
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
     # Depression
     depression_keywords = ['depressed', 'depression', 'sad', 'hopeless', 'empty', 'worthless', 'tired', 'exhausted', 'no energy']
     if any(word in message_lower for word in depression_keywords):
         return 'depression'
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
     # Academic stress
     academic_keywords = ['exam', 'study', 'grades', 'assignment', 'project', 'deadline', 'fail', 'marks']
     if any(word in message_lower for word in academic_keywords):
         return 'academic_stress'
-<<<<<<< HEAD
 
     # Relationship issues (check before greetings to avoid false positives)
     relationship_keywords = ['relationship', 'breakup', 'break up', 'lonely', 'isolated', 'rejected']
     if any(keyword in message_lower for keyword in relationship_keywords):
         return 'relationship'
-    
+
     # Family/friend issues (separate check to avoid conflicts)
     social_keywords = ['family problem', 'friend problem', 'fighting with', 'argument with']
     if any(keyword in message_lower for keyword in social_keywords):
         return 'relationship'
 
-=======
-    
-    # Relationship issues
-    relationship_keywords = ['relationship', 'breakup', 'friend', 'family', 'lonely', 'isolated', 'rejected']
-    if any(word in message_lower for word in relationship_keywords):
-        return 'relationship'
-    
->>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
     # Sleep issues
     sleep_keywords = ['sleep', 'insomnia', 'tired', 'exhausted', 'can\'t sleep', 'wake up']
     if any(word in message_lower for word in sleep_keywords):
         return 'sleep'
-    
-<<<<<<< HEAD
+
     # Positive responses and improvement
     positive_keywords = ['feeling better', 'improved', 'doing well', 'much better', 'progress', 'helpful', 'thanks', 'thank you', 'grateful', 'feeling good', 'happy', 'great', 'excellent']
     if any(keyword in message_lower for keyword in positive_keywords):
@@ -194,20 +153,6 @@ def get_chatbot_response(message, session_history=None, emotion=None, preferred_
     
     # Analyze sentiment with enhanced detection
     sentiment_score = analyze_sentiment(message)
-=======
-    return 'general'
-
-
-def get_chatbot_response(message, session_history=None, emotion=None):
-    """
-    Generate chatbot response based on message, intent, and emotion
-    Returns dict with response, crisis_detected flag, and suggested_action
-    """
-    intent = detect_intent(message)
-
-    if session_history is None:
-        session_history = []
->>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
 
     # Inject emotion into context for multimodal reasoning
     emotion_context = ""
@@ -223,7 +168,6 @@ def get_chatbot_response(message, session_history=None, emotion=None):
             emotion_context += "The user appears neutral - maintain supportive conversation. "
         elif emotion.lower() == 'no_face_detected':
             emotion_context += "No facial data available - rely on text analysis only. "
-<<<<<<< HEAD
     
     # Build comprehensive context summary
     context_summary = f"""
@@ -235,15 +179,12 @@ def get_chatbot_response(message, session_history=None, emotion=None):
 - Functional Impact: {deeper_context['functional_impact'] if deeper_context['functional_impact'] else 'Not clearly indicated'}
 - Temporal Context: {deeper_context['temporal_context'] if deeper_context['temporal_context'] else 'Not specified'}
 """
-=======
->>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
 
     response_data = {
         'response': '',
         'crisis_detected': False,
         'suggested_action': None,
         'intent': intent,
-<<<<<<< HEAD
         'emotion_context': emotion_context.strip(),
         'language': language
     }
@@ -704,141 +645,11 @@ def analyze_sentiment(message):
     """Enhanced sentiment analysis - returns score between -1 (negative) and 1 (positive)"""
     positive_words = ['good', 'happy', 'great', 'better', 'fine', 'okay', 'excited', 'grateful', 'relieved', 'hopeful', 'improved', 'support', 'help']
     negative_words = ['bad', 'sad', 'awful', 'terrible', 'worst', 'hate', 'angry', 'frustrated', 'hopeless', 'anxious', 'worried', 'scared', 'depressed', 'tired', 'exhausted']
-=======
-        'emotion_context': emotion_context.strip()
-    }
-    
-    # Crisis handling - immediate priority
-    if intent == 'crisis':
-        response_data['crisis_detected'] = True
-        response_data['response'] = (
-            "I understand you're going through an extremely difficult time right now. "
-            "Your feelings are valid, and you don't have to go through this alone.\n\n"
-            "Please reach out for immediate help:\n"
-            "• National Mental Health Helpline (24/7): 1800-599-0019\n"
-            "• Aasra Suicide Prevention: +91-9820466726\n"
-            "• iCall: +91-9152987821\n\n"
-            "Would you like me to help you book an appointment with a counselor? "
-            "They can provide immediate support and guidance."
-        )
-        response_data['suggested_action'] = 'book_appointment'
-        return response_data
-    
-    # Intent-based responses
-    responses = {
-        'greeting': [
-            "Hello! I'm here to support you. How are you feeling today?",
-            "Hi there! I'm glad you reached out. What's on your mind?",
-            "Namaste! I'm here to listen and help. What would you like to talk about?",
-            "Hello! This is a safe space. Feel free to share what you're going through."
-        ],
-        'anxiety': [
-            "I understand that anxiety can feel overwhelming. Here are some evidence-based techniques that can help:\n\n"
-            "1. **Deep Breathing (4-7-8 technique)**: Inhale for 4 counts, hold for 7, exhale for 8. Repeat 4 times.\n"
-            "2. **Grounding (5-4-3-2-1 method)**: Name 5 things you see, 4 you can touch, 3 you can hear, 2 you can smell, 1 you can taste.\n"
-            "3. **Progressive Muscle Relaxation**: Tense and release each muscle group from toes to head.\n\n"
-            "Remember, anxiety is temporary. Would you like to try a guided meditation or talk more about what's causing your anxiety?",
-            
-            "Anxiety during exam season is very common among Indian students. Here's what research shows helps:\n\n"
-            "• **Study breaks every 45 minutes**: Your brain needs rest to process information.\n"
-            "• **Regular sleep schedule**: Aim for 7-8 hours - this improves memory retention.\n"
-            "• **Mindful walking**: 10 minutes of walking can reduce anxiety by 40%.\n\n"
-            "Would you like specific strategies for managing exam anxiety?",
-        ],
-        'depression': [
-            "I hear you, and what you're feeling is valid. Depression affects nearly 60% of Indian college students, so you're not alone.\n\n"
-            "Evidence-based approaches that help:\n"
-            "1. **Physical activity**: Even 15 minutes of walking can boost mood through endorphin release.\n"
-            "2. **Social connection**: Consider joining a study group or campus club - research shows peer support reduces symptoms by 30%.\n"
-            "3. **Routine**: Maintaining a daily schedule (even small tasks) can help restore a sense of control.\n\n"
-            "Would you like me to connect you with a counselor or check out our peer support forum?",
-            
-            "Depression can make everything feel difficult. Here are gentle steps you can take:\n\n"
-            "• **Start small**: Set one tiny goal each day (even making your bed counts)\n"
-            "• **Sunlight exposure**: 20 minutes of morning sunlight helps regulate mood\n"
-            "• **Creative expression**: Journaling, art, or music can help process emotions\n\n"
-            "If these feelings persist, speaking with a professional counselor can provide personalized support. Would you like to book an appointment?",
-        ],
-        'academic_stress': [
-            "Academic pressure is very real, especially in Indian colleges. Let's break this down:\n\n"
-            "**Time Management Strategies**:\n"
-            "• Use the Pomodoro Technique: 25 min study + 5 min break\n"
-            "• Prioritize tasks using the Eisenhower Matrix (urgent vs important)\n"
-            "• Create a realistic study schedule - overloading leads to burnout\n\n"
-            "**During Exams**:\n"
-            "• Practice previous year papers - familiarity reduces anxiety\n"
-            "• Study in groups for difficult subjects (peer learning is proven effective)\n"
-            "• Remember: Your worth isn't defined by your grades\n\n"
-            "Would you like specific tips for a particular subject or exam?",
-            
-            "It's completely normal to feel stressed about studies. Research shows that moderate stress can actually improve performance, but excessive stress hinders it.\n\n"
-            "Here's what works:\n"
-            "• **Active recall**: Test yourself instead of just re-reading (more effective)\n"
-            "• **Spaced repetition**: Review material over several days, not cramming\n"
-            "• **Sleep before exams**: 7-8 hours improves memory consolidation\n\n"
-            "Would you like help creating a study plan?",
-        ],
-        'relationship': [
-            "Relationship difficulties can be really tough. Let's work through this:\n\n"
-            "**For Friend Issues**:\n"
-            "• Open communication - express feelings using 'I' statements\n"
-            "• Set boundaries - it's okay to say no\n"
-            "• Quality over quantity - a few good friends matter more than many\n\n"
-            "**For Family Conflicts**:\n"
-            "• Cultural expectations can add pressure - this is common for Indian students\n"
-            "• Consider family counseling if communication is difficult\n"
-            "• Find support in campus counseling services\n\n"
-            "Would you like to share more about what you're experiencing? Our forum also has peer support.",
-            
-            "Feeling lonely or isolated is something many students go through, especially in college. Here's what helps:\n\n"
-            "• Join campus clubs or activities aligned with your interests\n"
-            "• Consider volunteering - helping others increases connection\n"
-            "• Our peer support forum is a safe space to connect with others going through similar experiences\n\n"
-            "Remember, forming meaningful connections takes time. Would you like to explore our community forum?",
-        ],
-        'sleep': [
-            "Sleep issues are common, especially during stressful periods. Here's what research recommends:\n\n"
-            "**Sleep Hygiene**:\n"
-            "• Maintain a consistent sleep schedule (even on weekends)\n"
-            "• Avoid screens 1 hour before bed (blue light disrupts melatonin)\n"
-            "• Create a bedtime routine: reading, light stretching, or meditation\n"
-            "• Keep your room cool (18-20°C is optimal for sleep)\n\n"
-            "**For Exam Season**:\n"
-            "• Prioritize sleep over late-night studying - well-rested brains perform better\n"
-            "• Power naps (20-30 min) can help, but avoid napping after 3 PM\n\n"
-            "Would you like to try a guided sleep meditation from our resources?",
-        ],
-        'general': [
-            "I'm here to listen. Could you tell me a bit more about what you're going through?",
-            "Thank you for sharing. How has this been affecting your daily life?",
-            "That sounds difficult. What would you like help with today?",
-            "I understand. What do you think would help you feel better?",
-        ]
-    }
-    
-    # Get appropriate response based on intent
-    intent_responses = responses.get(intent, responses['general'])
-    response_data['response'] = random.choice(intent_responses)
-    
-    # Suggest appointment if intent suggests professional help might be beneficial
-    if intent in ['depression', 'anxiety'] and len(session_history) > 3:
-        response_data['suggested_action'] = 'suggest_counseling'
-        response_data['response'] += "\n\nBased on our conversation, connecting with a professional counselor might be helpful. Would you like to explore that option?"
-    
-    return response_data
-
-
-def analyze_sentiment(message):
-    """Simple sentiment analysis - returns score between -1 (negative) and 1 (positive)"""
-    positive_words = ['good', 'happy', 'great', 'better', 'fine', 'okay', 'excited', 'grateful']
-    negative_words = ['bad', 'sad', 'awful', 'terrible', 'worst', 'hate', 'angry', 'frustrated', 'hopeless']
->>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
     
     message_lower = message.lower()
     positive_count = sum(1 for word in positive_words if word in message_lower)
     negative_count = sum(1 for word in negative_words if word in message_lower)
     
-<<<<<<< HEAD
     # Calculate weighted sentiment
     if positive_count > negative_count:
         intensity = min(positive_count / max(len(message.split()), 1), 1.0)  # Normalize by message length
@@ -846,12 +657,6 @@ def analyze_sentiment(message):
     elif negative_count > positive_count:
         intensity = min(negative_count / max(len(message.split()), 1), 1.0)
         return -0.5 - (intensity * 0.4)  # Range: -0.5 to -0.9
-=======
-    if positive_count > negative_count:
-        return 0.3
-    elif negative_count > positive_count:
-        return -0.5
->>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
     else:
         return 0.0
 
@@ -870,4 +675,3 @@ def extract_keywords(message):
             detected.append(category)
     
     return detected
-

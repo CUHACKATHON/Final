@@ -2,10 +2,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import JsonResponse
-<<<<<<< HEAD
 from django.shortcuts import render, redirect, get_object_or_404
-=======
->>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
@@ -215,10 +212,7 @@ def chat_api(request):
         message = data.get('message', '').strip()
         session_id_str = data.get('session_id', '')
         emotion = data.get('emotion', None)  # New: Receive emotion from frontend
-<<<<<<< HEAD
         preferred_language = data.get('language', 'en')  # Language preference from frontend
-=======
->>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
 
         if not message:
             return JsonResponse({'error': 'Message is required'}, status=400)
@@ -239,13 +233,8 @@ def chat_api(request):
         recent_messages = ChatMessage.objects.filter(session=chat_session).order_by('timestamp')[:10]
         session_history = [(msg.message, msg.response) for msg in recent_messages]
 
-<<<<<<< HEAD
         # Get chatbot response with emotion context and language preference
         response_data = get_chatbot_response(message, session_history, emotion, preferred_language)
-=======
-        # Get chatbot response with emotion context
-        response_data = get_chatbot_response(message, session_history, emotion)
->>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
 
         # Analyze sentiment
         sentiment_score = analyze_sentiment(message)
@@ -411,7 +400,6 @@ def resources_view(request):
 def forum_view(request):
     """Peer support forum - list approved posts"""
     posts = ForumPost.objects.filter(moderated=True).order_by('-timestamp')
-<<<<<<< HEAD
     
     # Get session ID to check likes
     session_id_str = request.GET.get('session_id', '') or request.session.get('session_id', '')
@@ -433,9 +421,6 @@ def forum_view(request):
         'posts': posts,
         'liked_post_ids': liked_post_ids
     })
-=======
-    return render(request, 'forum.html', {'posts': posts})
->>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
 
 
 @csrf_exempt
@@ -487,7 +472,6 @@ def forum_post_detail(request, post_id):
     """Get forum post with replies"""
     post = get_object_or_404(ForumPost, id=post_id, moderated=True)
     replies = ForumReply.objects.filter(post=post, moderated=True).order_by('timestamp')
-<<<<<<< HEAD
     
     # Check if current session has liked this post
     session_id_str = request.GET.get('session_id', '') or request.session.get('session_id', '')
@@ -594,9 +578,6 @@ def forum_post_share(request, post_id):
         return JsonResponse({'error': 'Invalid JSON'}, status=400)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
-=======
-    return render(request, 'forum_post_detail.html', {'post': post, 'replies': replies})
->>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
 
 
 @csrf_exempt
@@ -912,13 +893,12 @@ def predict_emotion_api(request):
         image_bytes = image_file.read()
 
         # Import the prediction function
-<<<<<<< HEAD
         import sys
         import os
         # Add the project root to the path to find predict_emotion module
         # views.py is in core/, so we need to go up one level to get to project root
         current_dir = os.path.dirname(os.path.abspath(__file__))  # core/
-        project_root = os.path.dirname(current_dir)  # CU_HACKATHON/
+        project_root = os.path.dirname(current_dir)  # Project root
         
         if project_root not in sys.path:
             sys.path.insert(0, project_root)
@@ -936,9 +916,6 @@ def predict_emotion_api(request):
                 predict_emotion_from_image = predict_module.predict_emotion_from_image
             else:
                 raise ImportError(f"Could not find predict_emotion.py at {predict_path}. Original error: {str(e)}")
-=======
-        from predict_emotion import predict_emotion_from_image
->>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
 
         # Get emotion prediction
         emotion = predict_emotion_from_image(image_bytes)
@@ -949,7 +926,6 @@ def predict_emotion_api(request):
         })
 
     except Exception as e:
-<<<<<<< HEAD
         import traceback
         from django.conf import settings
         error_details = traceback.format_exc()
@@ -1035,9 +1011,3 @@ def checkin_results_view(request):
     }
 
     return render(request, 'checkin_results.html', context)
-=======
-        return JsonResponse({
-            'error': str(e),
-            'emotion': 'Decode_Error'
-        }, status=500)
->>>>>>> bd11b21620787d7a385999cc098de119c036ce3a
